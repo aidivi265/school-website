@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  base: '/school-website/',
+  base: process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? '/school-website/' : '/'),
   plugins: [
     react(),
     tailwindcss(),
