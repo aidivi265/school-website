@@ -40,8 +40,8 @@ function Hero() {
           </div>
 
           <h1 className="font-serif leading-[1.1] mb-5">
-            <span className="block text-white text-5xl sm:text-6xl lg:text-7xl font-bold">{name.split(' ').slice(0, -1).join(' ')}</span>
-            <span className="block text-amber-400 text-5xl sm:text-6xl lg:text-7xl font-bold">{name.split(' ').slice(-1)}</span>
+            <span className="block text-white text-4xl sm:text-6xl lg:text-7xl font-bold">{name.split(' ').slice(0, -1).join(' ')}</span>
+            <span className="block text-amber-400 text-4xl sm:text-6xl lg:text-7xl font-bold">{name.split(' ').slice(-1)}</span>
           </h1>
 
           <p className="text-navy-200 text-lg sm:text-xl font-light italic mb-3">"{tagline}"</p>

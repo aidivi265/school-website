@@ -182,6 +182,7 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
+                onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium mb-0.5 transition-colors ${
                     isActive ? 'bg-navy-900 text-white' : 'text-slate-700 hover:bg-navy-50 hover:text-navy-800'
@@ -195,6 +196,7 @@ export default function Navbar() {
           <div className="p-4 border-t border-slate-100 space-y-3">
             <Link
               to="/admissions"
+              onClick={() => setIsOpen(false)}
               className="flex items-center justify-center w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-3 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all text-sm"
             >
               Admission Enquiry
