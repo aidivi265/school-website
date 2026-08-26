@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Typography ── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* ── Brand: Deep Navy ── */
+  --color-navy-50:  #eef2f9;
+  --color-navy-100: #d5e0f0;
+  --color-navy-200: #adc1e2;
+  --color-navy-300: #7ea0d0;
+  --color-navy-400: #5580be;
+  --color-navy-500: #3a64ac;
+  --color-navy-600: #2a4e8f;
+  --color-navy-700: #1e3a72;
+  --color-navy-800: #152b5a;
+  --color-navy-900: #0e1e42;
+  --color-navy-950: #07102a;
+
+  /* ── Brand: Gold ── */
+  --color-gold-50:  #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+  --color-gold-800: #92400e;
+  --color-gold-900: #78350f;
+
+  /* ── Neutral Surface ── */
+  --color-surface: #f8f9fc;
+  --color-surface-alt: #f0f3f8;
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #1a1f36;
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar          { width: 5px; }
+::-webkit-scrollbar-track    { background: #eef2f9; }
+::-webkit-scrollbar-thumb    { background: #7ea0d0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2a4e8f; }
+
+/* ── Font helpers ── */
+.font-serif { font-family: var(--font-serif); }
+
+/* ── Smooth image loads ── */
+img { transition: opacity 0.35s ease; }
+
+/* ── Gold shimmer utility ── */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #fcd34d 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Section divider wave ── */
+.wave-divider {
+  overflow: hidden;
+  line-height: 0;
+}
+.wave-divider svg {
+  display: block;
+  width: 100%;
+}
+
+/* ── Animated underline on hover ── */
+.hover-underline {
+  position: relative;
+}
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.25s ease;
+}
+.hover-underline:hover::after { width: 100%; }
+
+/* ── Card hover lift ── */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(14, 30, 66, 0.12);
+}
+
+/* ── Glass panel ── */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
