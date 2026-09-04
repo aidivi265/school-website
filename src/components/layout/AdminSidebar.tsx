@@ -14,6 +14,7 @@ import {
   HelpCircle,
   FileText,
   Settings,
+  ArrowLeftRight,
   ExternalLink,
   LogOut,
   GraduationCap,
@@ -33,6 +34,7 @@ const sidebarLinks = [
   { label: 'FAQs & Assistant', href: '/admin/faqs', icon: HelpCircle },
   { label: 'Page Content CMS', href: '/admin/pages', icon: FileText },
   { label: 'School Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Data Migration', href: '/admin/migration', icon: ArrowLeftRight },
 ];
 
 export default function AdminSidebar({

@@ -1,0 +1,47 @@
+import { getMigrationSupabaseClient, readCSVFile, logMigrationSummary } from './utils';
+import { validateRow } from '../../src/lib/migration/validator';
+
+export async function importDocuments(filePath = 'data/migration_samples/documents.csv', schoolId = '00000000-0000-0000-0000-000000000001') {
+  console.log(`🚀 Starting Documents Migration from: ${filePath}`);
+  const { rows } = readCSVFile(filePath);
+  const supabase = getMigrationSupabaseClient();
+
+  const stats = { total: rows.length, imported: 0, updated: 0, skipped: 0, failed: 0 };
+  const batchId = `batch-docs-${Date.now()}`;
+
+  for (let i = 0; i < rows.length; i++) {
+    const rowResult = validateRow('documents', rows[i], i + 1);
+    if (!rowResult.isValid) {
+      console.error(`❌ Row ${i + 1} Error:`, rowResult.errors);
+      stats.failed++;
+      continue;
+    }
+
+    if (supabase) {
+      const { error } = await supabase.from('documents').insert([
+        {
+          ...rowResult.data,
+          school_id: schoolId,
+          migration_batch_id: batchId,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+      if (error) {
+        console.error(`❌ Insert Error row ${i + 1}:`, error.message);
+        stats.failed++;
+      } else {
+        stats.imported++;
+      }
+    } else {
+      stats.imported++;
+    }
+  }
+
+  logMigrationSummary('documents', stats);
+  return stats;
+}
+
+if (require.main === module) {
+  const file = process.argv[2] || 'data/migration_samples/documents.csv';
+  importDocuments(file).catch(console.error);
+}

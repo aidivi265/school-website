@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export async function createServerSupabaseClient() {
@@ -11,7 +11,7 @@ export async function createServerSupabaseClient() {
     return null;
   }
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  return createSupabaseServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -23,9 +23,10 @@ export async function createServerSupabaseClient() {
           );
         } catch {
           // The `setAll` method was called from a Server Component.
-          // This can be ignored if you have middleware refreshing user sessions.
         }
       },
     },
   });
 }
+
+export const createServerClient = createServerSupabaseClient;
