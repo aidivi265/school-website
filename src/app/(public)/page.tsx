@@ -17,9 +17,7 @@ import {
   HeartHandshake,
   Clock,
   Compass,
-  FileText,
   Mail,
-  HelpCircle,
   Download,
 } from 'lucide-react';
 import {

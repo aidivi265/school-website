@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import PageHeader from '@/components/layout/PageHeader';
-import { SectionHeader, Badge } from '@/components/ui';
-import { Target, Compass, Heart, Award, Shield, CheckCircle } from 'lucide-react';
+import { SectionHeader } from '@/components/ui';
+import { Target, Compass, Heart, Shield, CheckCircle } from 'lucide-react';
 import { getSchoolData } from '@/lib/supabase/service';
 
 export const metadata: Metadata = {

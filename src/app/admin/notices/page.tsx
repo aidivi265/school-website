@@ -5,7 +5,7 @@ import { mockNotices } from '@/lib/data/mockData';
 import { Notice } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
-import { Plus, Edit2, Trash2, Pin, Search, Download, Calendar, Filter, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Pin, Search, X } from 'lucide-react';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
 import ImageUploader from '@/components/admin/ImageUploader';

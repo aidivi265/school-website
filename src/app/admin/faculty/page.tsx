@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { mockFaculty } from '@/lib/data/mockData';
 import { FacultyMember } from '@/types';
-import { Button, Badge } from '@/components/ui';
-import { Plus, Edit2, Trash2, Search, X, Users, Award, Briefcase } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
 import ImageUploader from '@/components/admin/ImageUploader';

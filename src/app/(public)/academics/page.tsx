@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import PageHeader from '@/components/layout/PageHeader';
-import { SectionHeader, Badge, Card } from '@/components/ui';
-import { BookOpen, Award, CheckCircle2, ArrowRight, Sparkles, Brain, Compass, Users } from 'lucide-react';
+import { SectionHeader, Badge } from '@/components/ui';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Academics & Curriculum | CBSE Streams & Pedagogy',
@@ -134,7 +134,7 @@ export default function AcademicsPage() {
           />
 
           <div className="space-y-6 max-w-5xl mx-auto">
-            {levels.map((lvl, index) => (
+            {levels.map((lvl) => (
               <div
                 key={lvl.title}
                 className="bg-white rounded-2xl p-7 sm:p-8 border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300"

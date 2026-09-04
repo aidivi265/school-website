@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AdmissionEnquiry } from '@/types';
-import { Button, Badge } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
@@ -11,17 +11,8 @@ import {
   Search,
   Phone,
   Mail,
-  Calendar,
-  MapPin,
-  UserCheck,
-  MessageSquare,
   Download,
-  Filter,
   Trash2,
-  Edit3,
-  CheckCircle2,
-  Clock,
-  Printer,
   X,
 } from 'lucide-react';
 

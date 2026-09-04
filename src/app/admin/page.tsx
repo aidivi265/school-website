@@ -1,27 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   Bell,
   Calendar,
   Users,
   Image as ImageIcon,
-  Trophy,
   FileDown,
   UserCheck,
   ArrowUpRight,
   Plus,
-  Clock,
-  CheckCircle,
-  Eye,
 } from 'lucide-react';
 import { mockNotices, mockEvents, mockFaculty, mockGalleryImages, mockDocuments } from '@/lib/data/mockData';
 import { formatDate } from '@/lib/utils';
-import { Badge, Button } from '@/components/ui';
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     noticesCount: mockNotices.length,
     eventsCount: mockEvents.length,
     facultyCount: mockFaculty.length,

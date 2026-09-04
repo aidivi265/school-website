@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import PageHeader from '@/components/layout/PageHeader';
-import { SectionHeader, Badge } from '@/components/ui';
+import { SectionHeader } from '@/components/ui';
 import EnquiryForm from '@/components/admissions/EnquiryForm';
-import { CheckCircle2, FileText, Phone, Mail, Calendar, HelpCircle, ArrowRight } from 'lucide-react';
+import { FileText, ArrowRight } from 'lucide-react';
 import { getSchoolData } from '@/lib/supabase/service';
 
 export const metadata: Metadata = {

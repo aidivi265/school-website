@@ -5,15 +5,11 @@ import { Button } from '@/components/ui';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
 import {
   Save,
-  CheckCircle,
   FileText,
   Home,
   BookOpen,
   Compass,
   GraduationCap,
-  Sparkles,
-  Award,
-  Layers,
 } from 'lucide-react';
 
 export default function AdminPagesCMS() {

@@ -1,5 +1,7 @@
 import { getMigrationSupabaseClient, readCSVFile, logMigrationSummary } from './utils';
 import { validateRow } from '../../src/lib/migration/validator';
+import process from 'process';
+import { fileURLToPath } from 'url';
 
 export async function importGallery(
   albumsFile = 'data/migration_samples/gallery_albums.csv',
@@ -12,7 +14,7 @@ export async function importGallery(
 
   // 1. Import Albums
   const albumStats = { total: 0, imported: 0, updated: 0, skipped: 0, failed: 0 };
-  const albumMap = new Map<string, string>(); // Title -> ID
+  const albumMap = new Map<string, string>();
 
   try {
     const { rows: albumRows } = readCSVFile(albumsFile);
@@ -47,7 +49,7 @@ export async function importGallery(
         albumStats.imported++;
       }
     }
-  } catch (err) {
+  } catch {
     console.warn('Albums file skipped or not found.');
   }
 
@@ -87,13 +89,13 @@ export async function importGallery(
         imgStats.imported++;
       }
     }
-  } catch (err) {
+  } catch {
     console.warn('Images file skipped or not found.');
   }
 
   logMigrationSummary('gallery_images', imgStats);
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   importGallery().catch(console.error);
 }

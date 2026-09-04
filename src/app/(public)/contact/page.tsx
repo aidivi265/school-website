@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import PageHeader from '@/components/layout/PageHeader';
 import ContactForm from '@/components/contact/ContactForm';
 import { getSchoolData } from '@/lib/supabase/service';
-import { MapPin, Phone, Mail, Clock, ShieldCheck, Navigation } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Location, Phone & Office Timings',

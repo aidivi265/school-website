@@ -1,5 +1,7 @@
 import { getMigrationSupabaseClient, readCSVFile, logMigrationSummary } from './utils';
 import { validateRow } from '../../src/lib/migration/validator';
+import process from 'process';
+import { fileURLToPath } from 'url';
 
 export async function importDocuments(filePath = 'data/migration_samples/documents.csv', schoolId = '00000000-0000-0000-0000-000000000001') {
   console.log(`🚀 Starting Documents Migration from: ${filePath}`);
@@ -41,7 +43,7 @@ export async function importDocuments(filePath = 'data/migration_samples/documen
   return stats;
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const file = process.argv[2] || 'data/migration_samples/documents.csv';
   importDocuments(file).catch(console.error);
 }

@@ -12,7 +12,6 @@ import {
   ImportResult,
   MigrationBatch,
   MediaMigrationRecord,
-  ValidationError,
 } from '@/lib/migration/types';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
@@ -25,7 +24,6 @@ import {
   XCircle,
   Download,
   RotateCcw,
-  Layers,
   Image as ImageIcon,
   Link2,
   History,
@@ -36,10 +34,8 @@ import {
   X,
   Play,
   Copy,
-  ExternalLink,
   Info,
   Loader2,
-  Trash2,
 } from 'lucide-react';
 
 export default function AdminMigrationPage() {
@@ -120,12 +116,6 @@ export default function AdminMigrationPage() {
   // Toast
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
-  // Load Initial Batches & Mappings
-  useEffect(() => {
-    fetchBatches();
-    fetchMappings();
-  }, []);
-
   const fetchBatches = async () => {
     try {
       const res = await fetch('/api/admin/migration/batches');
@@ -149,6 +139,12 @@ export default function AdminMigrationPage() {
       // Keep local fallback
     }
   };
+
+  // Load Initial Batches & Mappings
+  useEffect(() => {
+    fetchBatches();
+    fetchMappings();
+  }, []);
 
   // Handle CSV Selection & Parsing
   const handleCSVUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

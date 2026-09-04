@@ -5,8 +5,10 @@ import { importGallery } from './import-gallery';
 import { importAchievements } from './import-achievements';
 import { importDocuments } from './import-documents';
 import { importFAQs } from './import-faqs';
+import process from 'process';
+import { fileURLToPath } from 'url';
 
-async function importAll() {
+export async function importAll() {
   console.log('\n======================================================');
   console.log('🏛️  DECENT PUBLIC SCHOOL (ROHINI) - FULL MIGRATION RUN');
   console.log('    Migrating content from Legacy Wix to Supabase DB  ');
@@ -34,12 +36,12 @@ async function importAll() {
     console.log('7/7: Migrating FAQs & Assistant Knowledge...');
     await importFAQs();
 
-    console.log('\n✨ FULL MIGRATION COMPLETED SUCCESSFULLY!\n');
+    console.log('✨ FULL MIGRATION COMPLETED SUCCESSFULLY!\n');
   } catch (err: any) {
     console.error('\n❌ Migration Pipeline Terminated with error:', err?.message || err);
   }
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   importAll().catch(console.error);
 }

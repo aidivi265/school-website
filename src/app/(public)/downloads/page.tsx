@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import PageHeader from '@/components/layout/PageHeader';
 import { SectionHeader, Badge, Card, Button } from '@/components/ui';
 import { getDocuments } from '@/lib/supabase/service';
-import { FileText, Download, FileCheck, Calendar, Shield } from 'lucide-react';
+import { FileText, Download, FileCheck, Calendar } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 export const metadata: Metadata = {

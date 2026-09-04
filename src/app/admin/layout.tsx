@@ -1,22 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import AdminSidebar from '@/components/layout/AdminSidebar';
-import { Menu, Bell, Shield, User, ExternalLink } from 'lucide-react';
+import { Menu, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
   // If on /admin/login, don't show the dashboard shell
   const isLoginPage = pathname === '/admin/login';
 
   useEffect(() => {
-    setMounted(true);
     // Simple client auth check
     if (!isLoginPage) {
       const session = localStorage.getItem('dps_admin_session');

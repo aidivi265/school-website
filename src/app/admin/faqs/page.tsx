@@ -11,12 +11,8 @@ import {
   Plus,
   Edit2,
   Trash2,
-  HelpCircle,
   Search,
   X,
-  Bot,
-  Tag,
-  CheckCircle2,
   Sparkles,
 } from 'lucide-react';
 

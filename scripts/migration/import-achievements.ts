@@ -1,5 +1,7 @@
 import { getMigrationSupabaseClient, readCSVFile, logMigrationSummary } from './utils';
 import { validateRow } from '../../src/lib/migration/validator';
+import process from 'process';
+import { fileURLToPath } from 'url';
 
 export async function importAchievements(filePath = 'data/migration_samples/achievements.csv', schoolId = '00000000-0000-0000-0000-000000000001') {
   console.log(`🚀 Starting Achievements Migration from: ${filePath}`);
@@ -41,7 +43,7 @@ export async function importAchievements(filePath = 'data/migration_samples/achi
   return stats;
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const file = process.argv[2] || 'data/migration_samples/achievements.csv';
   importAchievements(file).catch(console.error);
 }

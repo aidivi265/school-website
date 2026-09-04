@@ -16,9 +16,6 @@ import {
   Folder,
   X,
   Search,
-  Grid,
-  Filter,
-  Layers,
   Calendar,
 } from 'lucide-react';
 
