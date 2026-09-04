@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockFAQs } from '@/lib/data/mockData';
+import { useFAQs } from '@/lib/cms/useCMS';
 import { FAQItem } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminFAQsPage() {
-  const [faqs, setFaqs] = useState<FAQItem[]>(mockFAQs);
+  const { faqs, setFaqs, upsertFAQ, deleteFAQ } = useFAQs();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockFaculty } from '@/lib/data/mockData';
+import { useFaculty } from '@/lib/cms/useCMS';
 import { FacultyMember } from '@/types';
 import { Button } from '@/components/ui';
 import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
@@ -11,7 +11,7 @@ import ImageUploader from '@/components/admin/ImageUploader';
 import EmptyState from '@/components/admin/EmptyState';
 
 export default function AdminFacultyPage() {
-  const [faculty, setFaculty] = useState<FacultyMember[]>(mockFaculty);
+  const { faculty, setFaculty, upsertFaculty, deleteFaculty } = useFaculty();
   const [search, setSearch] = useState('');
   const [selectedDept, setSelectedDept] = useState('All');
   const [editingTeacher, setEditingTeacher] = useState<FacultyMember | null>(null);

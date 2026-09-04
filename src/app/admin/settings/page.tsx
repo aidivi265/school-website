@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui';
-import { mockSchool } from '@/lib/data/mockData';
+import { useSiteSettings } from '@/lib/cms/useCMS';
+import { defaultSettings } from '@/lib/cms/cmsStore';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
 import {
   Save,
@@ -21,50 +22,94 @@ import {
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState<'identity' | 'contact' | 'location' | 'social' | 'banner' | 'footer'>('identity');
   const [toast, setToast] = useState<ToastMessage | null>(null);
+  const { settings, setSettings, isHydrated } = useSiteSettings();
 
   const [form, setForm] = useState({
-    // Identity
-    name: mockSchool.name,
-    tagline: mockSchool.tagline,
-    established: mockSchool.established,
-    affiliation: mockSchool.affiliation,
-    affiliation_no: mockSchool.affiliation_no,
+    name: defaultSettings.name,
+    tagline: defaultSettings.tagline,
+    established: defaultSettings.established,
+    affiliation: defaultSettings.affiliation,
+    affiliation_no: defaultSettings.affiliation_no,
     school_code: 'DPS-DL-2794',
 
-    // Contact
-    phone_office: mockSchool.phone_office,
-    phone_admissions: mockSchool.phone_admissions,
-    email_general: mockSchool.email_general,
-    email_admissions: mockSchool.email_admissions,
-    timings_school: mockSchool.timings_school,
-    timings_office: mockSchool.timings_office,
+    phone_office: defaultSettings.phone_office,
+    phone_admissions: defaultSettings.phone_admissions,
+    email_general: defaultSettings.email_general,
+    email_admissions: defaultSettings.email_admissions,
+    timings_school: defaultSettings.timings_school,
+    timings_office: defaultSettings.timings_office,
 
-    // Address
-    address_line1: mockSchool.address_line1,
-    city: mockSchool.city,
+    address_line1: defaultSettings.address_line1,
+    city: defaultSettings.city,
     state: 'Delhi',
-    pin: mockSchool.pin,
-    map_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3499.782012015526!2d77.1084!3d28.7001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d03c4f73809cb%3A0x8898bb6c8a385f!2sDecent%20Public%20School%20Sector%203%20Rohini!5e0!3m2!1sen!2sin!4v1700000000000',
+    pin: defaultSettings.pin,
+    map_embed_url: defaultSettings.map_embed || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3499.782012015526!2d77.1084!3d28.7001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d03c4f73809cb%3A0x8898bb6c8a385f!2sDecent%20Public%20School%20Sector%203%20Rohini!5e0!3m2!1sen!2sin!4v1700000000000',
 
-    // Social
-    social_facebook: mockSchool.social_facebook || 'https://facebook.com/decentpublicschoolrohini',
-    social_instagram: mockSchool.social_instagram || 'https://instagram.com/decentpublicschool_rohini',
-    social_youtube: mockSchool.social_youtube || 'https://youtube.com/@decentpublicschoolrohini',
-    social_twitter: 'https://twitter.com/dps_rohini',
+    social_facebook: defaultSettings.social_facebook || 'https://facebook.com/decentpublicschoolrohini',
+    social_instagram: defaultSettings.social_instagram || 'https://instagram.com/decentpublicschool_rohini',
+    social_youtube: defaultSettings.social_youtube || 'https://youtube.com/@decentpublicschoolrohini',
+    social_twitter: defaultSettings.social_twitter || 'https://twitter.com/dps_rohini',
 
-    // Banner
     banner_enabled: true,
     banner_text: 'Admissions Open for Session 2025–26 (Pre-School to Class XI) — Limited Seats Available',
     banner_cta_text: 'Apply Online',
     banner_cta_url: '/admissions',
 
-    // Footer
     footer_tagline: 'Committed to Nurturing Excellence, Values, and Lifelong Success Since 1995.',
     copyright_text: '© 2025 Decent Public School, Sector 3, Rohini, Delhi. All Rights Reserved.',
   });
 
+  useEffect(() => {
+    if (isHydrated && settings) {
+      setForm((prev) => ({
+        ...prev,
+        name: settings.name || prev.name,
+        tagline: settings.tagline || prev.tagline,
+        established: settings.established || prev.established,
+        affiliation: settings.affiliation || prev.affiliation,
+        affiliation_no: settings.affiliation_no || prev.affiliation_no,
+        phone_office: settings.phone_office || prev.phone_office,
+        phone_admissions: settings.phone_admissions || prev.phone_admissions,
+        email_general: settings.email_general || prev.email_general,
+        email_admissions: settings.email_admissions || prev.email_admissions,
+        timings_school: settings.timings_school || prev.timings_school,
+        timings_office: settings.timings_office || prev.timings_office,
+        address_line1: settings.address_line1 || prev.address_line1,
+        city: settings.city || prev.city,
+        pin: settings.pin || prev.pin,
+        map_embed_url: settings.map_embed || prev.map_embed_url,
+        social_facebook: settings.social_facebook || prev.social_facebook,
+        social_instagram: settings.social_instagram || prev.social_instagram,
+        social_youtube: settings.social_youtube || prev.social_youtube,
+        social_twitter: settings.social_twitter || prev.social_twitter,
+      }));
+    }
+  }, [settings, isHydrated]);
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    setSettings({
+      ...settings,
+      name: form.name,
+      tagline: form.tagline,
+      established: form.established,
+      affiliation: form.affiliation,
+      affiliation_no: form.affiliation_no,
+      phone_office: form.phone_office,
+      phone_admissions: form.phone_admissions,
+      email_general: form.email_general,
+      email_admissions: form.email_admissions,
+      timings_school: form.timings_school,
+      timings_office: form.timings_office,
+      address_line1: form.address_line1,
+      city: form.city,
+      pin: form.pin,
+      map_embed: form.map_embed_url,
+      social_facebook: form.social_facebook,
+      social_instagram: form.social_instagram,
+      social_youtube: form.social_youtube,
+      social_twitter: form.social_twitter,
+    });
     setToast({
       id: Date.now().toString(),
       type: 'success',

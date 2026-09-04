@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockNotices } from '@/lib/data/mockData';
+import { useNotices } from '@/lib/cms/useCMS';
 import { Notice } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
@@ -13,7 +13,7 @@ import FileUploader from '@/components/admin/FileUploader';
 import EmptyState from '@/components/admin/EmptyState';
 
 export default function AdminNoticesPage() {
-  const [notices, setNotices] = useState<Notice[]>(mockNotices);
+  const { notices, setNotices, upsertNotice, deleteNotice } = useNotices();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);

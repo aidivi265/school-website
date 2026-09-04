@@ -12,25 +12,34 @@ import {
   ArrowUpRight,
   Plus,
 } from 'lucide-react';
-import { mockNotices, mockEvents, mockFaculty, mockGalleryImages, mockDocuments } from '@/lib/data/mockData';
+import {
+  useNotices,
+  useEvents,
+  useFaculty,
+  useGallery,
+  useDocuments,
+  useEnquiries,
+} from '@/lib/cms/useCMS';
 import { formatDate } from '@/lib/utils';
 
 export default function AdminDashboardPage() {
-  const [stats] = useState({
-    noticesCount: mockNotices.length,
-    eventsCount: mockEvents.length,
-    facultyCount: mockFaculty.length,
-    galleryCount: mockGalleryImages.length,
-    documentsCount: mockDocuments.length,
-    enquiriesCount: 14,
-  });
+  const { notices } = useNotices();
+  const { events } = useEvents();
+  const { faculty } = useFaculty();
+  const { images } = useGallery();
+  const { documents } = useDocuments();
+  const { enquiries } = useEnquiries();
 
-  const recentEnquiries = [
-    { id: 'enq-101', parent: 'Sunil Malhotra', student: 'Aarav Malhotra', class: 'Pre-School (Nursery)', phone: '+91 98112 34567', date: '2025-06-16', status: 'Pending' },
-    { id: 'enq-102', parent: 'Meera Chawla', student: 'Kavya Chawla', class: 'Class XI (Science - PCM)', phone: '+91 98711 22334', date: '2025-06-15', status: 'Contacted' },
-    { id: 'enq-103', parent: 'Vikram Batra', student: 'Rohan Batra', class: 'Class I', phone: '+91 99100 88776', date: '2025-06-14', status: 'Under Review' },
-    { id: 'enq-104', parent: 'Pooja Aggarwal', student: 'Dev Aggarwal', class: 'Class VI', phone: '+91 98101 44556', date: '2025-06-12', status: 'Admitted' },
-  ];
+  const stats = {
+    noticesCount: notices.length,
+    eventsCount: events.length,
+    facultyCount: faculty.length,
+    galleryCount: images.length,
+    documentsCount: documents.length,
+    enquiriesCount: enquiries.length,
+  };
+
+  const recentEnquiries = enquiries.slice(0, 4);
 
   return (
     <div className="space-y-8">
@@ -126,10 +135,10 @@ export default function AdminDashboardPage() {
                   {recentEnquiries.map((enq) => (
                     <tr key={enq.id} className="hover:bg-slate-50 transition-colors">
                       <td className="py-3.5">
-                        <p className="font-bold text-slate-900">{enq.student}</p>
-                        <p className="text-[11px] text-slate-500">{enq.parent}</p>
+                        <p className="font-bold text-slate-900">{enq.student_name}</p>
+                        <p className="text-[11px] text-slate-500">{enq.parent_name}</p>
                       </td>
-                      <td className="py-3.5 font-medium text-slate-700">{enq.class}</td>
+                      <td className="py-3.5 font-medium text-slate-700">{enq.class_applying}</td>
                       <td className="py-3.5 text-slate-600">{enq.phone}</td>
                       <td className="py-3.5">
                         <span
@@ -178,7 +187,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="space-y-3.5">
-              {mockNotices.slice(0, 4).map((n) => (
+              {notices.slice(0, 4).map((n) => (
                 <div
                   key={n.id}
                   className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start justify-between gap-3"

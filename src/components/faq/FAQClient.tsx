@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useFAQs } from '@/lib/cms/useCMS';
 import { FAQItem } from '@/types';
 import { Search, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
@@ -15,6 +16,7 @@ const CATEGORIES = [
 ];
 
 export default function FAQClient({ initialFaqs }: { initialFaqs: FAQItem[] }) {
+  const { faqs: liveFaqs } = useFAQs(initialFaqs);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({
@@ -26,7 +28,9 @@ export default function FAQClient({ initialFaqs }: { initialFaqs: FAQItem[] }) {
     setOpenIds((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const filteredFaqs = initialFaqs.filter((faq) => {
+  const publishedFaqs = liveFaqs.filter((f) => f.is_published !== false);
+
+  const filteredFaqs = publishedFaqs.filter((faq) => {
     const matchesCat = selectedCategory === 'All' || faq.category === selectedCategory;
     const matchesQuery =
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||

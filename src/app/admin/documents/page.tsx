@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockDocuments } from '@/lib/data/mockData';
+import { useDocuments } from '@/lib/cms/useCMS';
 import { DocumentItem } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminDocumentsPage() {
-  const [docs, setDocs] = useState<DocumentItem[]>(mockDocuments);
+  const { documents: docs, setDocuments: setDocs, upsertDocument, deleteDocument } = useDocuments();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 

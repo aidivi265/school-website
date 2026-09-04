@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useFAQs } from '@/lib/cms/useCMS';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { FAQItem } from '@/types';
 
-export default function HomeFAQAccordion({ faqs }: { faqs: FAQItem[] }) {
+export default function HomeFAQAccordion({ faqs: initialFaqs }: { faqs: FAQItem[] }) {
+  const { faqs: liveFaqs } = useFAQs(initialFaqs);
+  const displayFaqs = liveFaqs.filter((f) => f.is_published !== false).slice(0, 6);
+
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({
-    [faqs[0]?.id || 'faq1']: true,
+    [initialFaqs[0]?.id || 'faq1']: true,
   });
 
   const toggle = (id: string) => {
@@ -15,7 +19,7 @@ export default function HomeFAQAccordion({ faqs }: { faqs: FAQItem[] }) {
 
   return (
     <div className="space-y-3.5 max-w-4xl mx-auto">
-      {faqs.map((faq) => {
+      {displayFaqs.map((faq) => {
         const isOpen = !!openIds[faq.id];
         return (
           <div

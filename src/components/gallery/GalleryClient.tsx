@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useGallery } from '@/lib/cms/useCMS';
 import { GalleryImage, GalleryAlbum } from '@/types';
 import { X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -15,16 +16,17 @@ const CATEGORIES = [
 ];
 
 export default function GalleryClient({
-  albums,
-  images,
+  albums: initialAlbums,
+  images: initialImages,
 }: {
   albums: GalleryAlbum[];
   images: GalleryImage[];
 }) {
+  const { images: liveImages } = useGallery(initialImages, initialAlbums);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
 
-  const filteredImages = images.filter(
+  const filteredImages = liveImages.filter(
     (img) => selectedCategory === 'all' || img.category === selectedCategory
   );
 

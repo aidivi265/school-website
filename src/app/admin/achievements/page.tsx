@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockAchievements } from '@/lib/data/mockData';
+import { useAchievements } from '@/lib/cms/useCMS';
 import { Achievement } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import ImageUploader from '@/components/admin/ImageUploader';
@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminAchievementsPage() {
-  const [achievements, setAchievements] = useState<Achievement[]>(mockAchievements);
+  const { achievements, setAchievements, upsertAchievement, deleteAchievement } = useAchievements();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [yearFilter, setYearFilter] = useState('all');

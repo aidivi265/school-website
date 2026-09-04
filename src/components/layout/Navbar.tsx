@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, Phone, Mail, GraduationCap, ArrowRight } from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { School } from '@/types';
+import { useSiteSettings } from '@/lib/cms/useCMS';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -23,7 +24,8 @@ const navLinks = [
   { label: 'FAQ', href: '/faq' },
 ];
 
-export default function Navbar({ school }: { school: School }) {
+export default function Navbar({ school: initialSchool }: { school: School }) {
+  const { settings: school } = useSiteSettings(initialSchool);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();

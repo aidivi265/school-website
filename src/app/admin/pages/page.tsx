@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePagesCMS } from '@/lib/cms/useCMS';
+import { defaultPagesCMS } from '@/lib/cms/cmsStore';
 import { Button } from '@/components/ui';
 import Toast, { ToastMessage } from '@/components/admin/Toast';
 import {
@@ -15,48 +17,19 @@ import {
 export default function AdminPagesCMS() {
   const [activeTab, setActiveTab] = useState<'home' | 'about' | 'principal' | 'academics' | 'admissions'>('home');
   const [toast, setToast] = useState<ToastMessage | null>(null);
+  const { pagesData, setPagesData, isHydrated } = usePagesCMS();
 
-  const [formData, setFormData] = useState({
-    // Homepage
-    heroHeadline: 'Empowering Young Minds for a Better Tomorrow',
-    heroSubtext:
-      'A premier CBSE-affiliated co-educational institution in Rohini, Delhi, dedicated to academic excellence, value-driven character building, and holistic student growth since 1995.',
-    announcementTicker:
-      'ADMISSIONS OPEN FOR SESSION 2025–26 | Pre-School to Class IX & Class XI (Science, Commerce & Humanities Streams) | Contact Admission Desk: 011-27948281 / +91 98188 99001',
-    statStudents: '2500+',
-    statTeachers: '120+',
-    statPassRate: '100%',
-    statExperience: '30+',
+  const [formData, setFormData] = useState(defaultPagesCMS);
 
-    // About Us
-    visionText:
-      'To be a premier center of educational excellence that nurtures enlightened, innovative, and ethically grounded global citizens capable of contributing meaningfully to society and thriving in an ever-evolving world.',
-    missionText:
-      'To provide a stimulating learning environment where academic rigour, technological innovation, character development, and inclusive values empower every student to discover their unique potential and achieve lifelong success.',
-    legacyText:
-      'Established in 1995, Decent Public School has evolved from a visionary institution into one of North-West Delhi\'s most trusted centers of quality school education.',
-
-    // Principal's Message
-    principalName: 'Mrs. Ritu Pathak',
-    principalDesignation: 'Principal, Decent Public School',
-    principalMessage:
-      'At Decent Public School, Rohini, we believe that every child carries within them an immense potential waiting to be discovered. Our role as educators is not merely to teach — it is to inspire, guide, and empower. We prepare students for life, not merely for examinations.',
-    principalQuote:
-      'Education is the most powerful weapon which you can use to change the world. At DPS Rohini, we nurture curious minds and compassionate hearts.',
-
-    // Academics
-    pedagogyText:
-      'Our academic framework follows the National Education Policy (NEP) 2020 guidelines, emphasizing experiential learning, conceptual clarity, inquiry-based discussions, and STEM project work.',
-    streamsOverview:
-      'Class XI and XII students can select from Science (PCM/PCB with CS/IP/Physical Education), Commerce (with or without Mathematics), and Humanities (Economics, Political Science, Psychology).',
-
-    // Admissions Page Text
-    admissionAgeCriteria:
-      'Pre-School (Nursery): 3+ years as of 31st March | Pre-Primary (KG): 4+ years | Class 1: 5+ years. Admissions are open based on merit and neighborhood criteria per Directorate of Education guidelines.',
-  });
+  useEffect(() => {
+    if (isHydrated && pagesData) {
+      setFormData(pagesData);
+    }
+  }, [pagesData, isHydrated]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    setPagesData(formData);
     setToast({
       id: Date.now().toString(),
       type: 'success',

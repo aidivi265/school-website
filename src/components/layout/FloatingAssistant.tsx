@@ -5,6 +5,7 @@ import { MessageSquare, X, Send, Bot, User, HelpCircle, Phone, ArrowRight } from
 import Link from 'next/link';
 import { FAQItem } from '@/types';
 import { matchFAQ } from '@/lib/utils';
+import { useFAQs } from '@/lib/cms/useCMS';
 
 const SUGGESTED_PROMPTS = [
   'Admission procedure 2025–26',
@@ -23,6 +24,7 @@ interface Message {
 }
 
 export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQItem[] }) {
+  const { faqs: liveFaqs } = useFAQs(initialFaqs);
   const [isOpen, setIsOpen] = useState(false);
   const [inputQuery, setInputQuery] = useState('');
   const [messages, setMessages] = useState<Message[]>([
@@ -51,7 +53,7 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
     setIsTyping(true);
 
     setTimeout(() => {
-      const match = matchFAQ(query, initialFaqs);
+      const match = matchFAQ(query, liveFaqs);
 
       if (match) {
         setMessages((prev) => [

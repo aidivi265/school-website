@@ -34,6 +34,10 @@ import { SectionHeader, Badge, Card } from '@/components/ui';
 import { formatDate, formatEventDate } from '@/lib/utils';
 import HomeFAQAccordion from '@/components/home/HomeFAQAccordion';
 import HomeGalleryLightbox from '@/components/home/HomeGalleryLightbox';
+import HomeHeroSection from '@/components/home/HomeHeroSection';
+import HomeNoticesSection from '@/components/home/HomeNoticesSection';
+import HomeEventsSection from '@/components/home/HomeEventsSection';
+import HomeAchievementsSection from '@/components/home/HomeAchievementsSection';
 
 export default async function HomePage() {
   const school = await getSchoolData();
@@ -113,82 +117,7 @@ export default async function HomePage() {
   return (
     <>
       {/* ─── 1. HERO SECTION ──────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-28 pb-20">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=85"
-            alt="Decent Public School Rohini Campus"
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-900/90 to-navy-950/80" />
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage:
-                'repeating-linear-gradient(45deg, white 0, white 1px, transparent 0, transparent 32px)',
-            }}
-          />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full">
-          <div className="max-w-2xl lg:max-w-3xl">
-            {/* Affiliation Pill */}
-            <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-amber-400/30 mb-6 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              <span className="text-amber-300 text-xs font-bold uppercase tracking-[0.2em]">
-                {school.affiliation} Affiliated (No. {school.affiliation_no}) · Sector 3, Rohini
-              </span>
-            </div>
-
-            {/* Main Hero Headline */}
-            <h1 className="font-serif leading-[1.08] mb-5 text-white">
-              <span className="block text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-                DECENT PUBLIC
-              </span>
-              <span className="block text-4xl sm:text-6xl lg:text-7xl font-bold text-gradient-gold">
-                SCHOOL, ROHINI
-              </span>
-            </h1>
-
-            <p className="text-amber-200 text-lg sm:text-xl font-light italic mb-4">
-              "{school.tagline}"
-            </p>
-            <p className="text-slate-200 text-base sm:text-lg leading-relaxed mb-10 max-w-xl">
-              {school.hero_subtext}
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center gap-2 bg-white text-navy-950 font-bold px-8 py-4 rounded-xl hover:bg-amber-50 transition-all shadow-xl text-base active:scale-[0.98]"
-              >
-                Explore Our School <ArrowRight size={18} />
-              </Link>
-              <Link
-                href="/admissions"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-8 py-4 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-900/30 text-base active:scale-[0.98]"
-              >
-                Admission Enquiry 2025–26
-              </Link>
-            </div>
-
-            {/* Quick Stat Highlights */}
-            <div className="mt-12 pt-8 border-t border-white/15 flex flex-wrap gap-8">
-              {mockStats.slice(0, 4).map((stat) => (
-                <div key={stat.label} className="flex items-center gap-2.5">
-                  <span className="font-serif text-amber-400 font-bold text-2xl sm:text-3xl">
-                    {stat.value}
-                  </span>
-                  <span className="text-slate-300 text-xs font-medium uppercase tracking-wider">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeHeroSection initialSchool={school} />
 
       {/* ─── 2. TRUST & HIGHLIGHTS STRIP ──────────────────────────────────── */}
       <section className="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950 border-b border-amber-500/25 text-white py-8">
@@ -491,213 +420,13 @@ export default async function HomePage() {
       </section>
 
       {/* ─── 8. LATEST NOTICES & NOTICE BOARD ──────────────────────────────── */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
-            <div>
-              <div className="inline-flex items-center gap-2 mb-2">
-                <span className="w-6 h-px bg-amber-500" />
-                <p className="text-amber-600 text-xs font-bold uppercase tracking-[0.2em]">
-                  Official Bulletin
-                </p>
-                <span className="w-6 h-px bg-amber-500" />
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-navy-950">
-                Latest News & Official Notices
-              </h2>
-            </div>
-            <Link
-              href="/notices"
-              className="inline-flex items-center gap-1.5 text-amber-600 font-bold text-sm hover:text-amber-700 transition-colors"
-            >
-              View All Notices <ChevronRight size={18} />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notices.map((notice, idx) => (
-              <Card key={notice.id} className="flex flex-col group border-slate-200">
-                <div className="relative h-48 overflow-hidden bg-navy-950">
-                  <img
-                    src={notice.image_url || 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80'}
-                    alt={notice.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950/70 to-transparent" />
-                  <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <Badge variant={notice.category === 'Admissions' ? 'amber' : 'navy'}>
-                      {notice.category}
-                    </Badge>
-                    {idx === 0 && (
-                      <span className="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
-                        NEW
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <span className="text-slate-400 text-xs flex items-center gap-1.5 mb-2.5">
-                      <Calendar size={12} className="text-amber-500" />
-                      {formatDate(notice.date)}
-                    </span>
-                    <h3 className="font-serif font-bold text-navy-950 text-base mb-2 leading-snug line-clamp-2">
-                      {notice.title}
-                    </h3>
-                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-3 mb-4">
-                      {notice.description}
-                    </p>
-                  </div>
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <Link
-                      href="/notices"
-                      className="text-amber-600 text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all"
-                    >
-                      Read Notice <ArrowRight size={14} />
-                    </Link>
-                    {notice.document_url && (
-                      <span className="text-[11px] text-slate-400 flex items-center gap-1">
-                        <Download size={12} /> PDF Attached
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeNoticesSection initialNotices={notices} />
 
       {/* ─── 9. UPCOMING EVENTS ───────────────────────────────────────────── */}
-      <section className="py-24 px-4 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
-            <div>
-              <div className="inline-flex items-center gap-2 mb-2">
-                <span className="w-6 h-px bg-amber-500" />
-                <p className="text-amber-600 text-xs font-bold uppercase tracking-[0.2em]">
-                  Campus Calendar
-                </p>
-                <span className="w-6 h-px bg-amber-500" />
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-navy-950">
-                Upcoming Events & Celebrations
-              </h2>
-            </div>
-            <Link
-              href="/events"
-              className="inline-flex items-center gap-1.5 text-amber-600 font-bold text-sm hover:text-amber-700 transition-colors"
-            >
-              View All Events <ChevronRight size={18} />
-            </Link>
-          </div>
-
-          <div className="space-y-4">
-            {upcomingEvents.map((event) => {
-              const { day, month, year } = formatEventDate(event.event_date);
-              return (
-                <div
-                  key={event.id}
-                  className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col sm:flex-row group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
-                >
-                  <div className="sm:w-56 h-48 sm:h-auto overflow-hidden flex-shrink-0 relative">
-                    <img
-                      src={event.cover_image_url || 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80'}
-                      alt={event.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex items-stretch flex-1">
-                    {/* Date Block */}
-                    <div className="bg-gradient-to-b from-navy-950 to-navy-900 text-white w-20 sm:w-24 flex flex-col items-center justify-center flex-shrink-0 p-3 gap-0.5 border-r border-amber-500/20">
-                      <span className="font-serif text-3xl font-bold leading-none text-amber-400">
-                        {day}
-                      </span>
-                      <span className="text-slate-300 text-xs uppercase font-bold tracking-wider">
-                        {month}
-                      </span>
-                      <span className="text-slate-400 text-[10px]">{year}</span>
-                    </div>
-                    {/* Details */}
-                    <div className="p-5 sm:p-6 flex flex-col justify-center flex-1 gap-1.5">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <Badge variant="navy">{event.category}</Badge>
-                        {event.venue && (
-                          <span className="text-slate-500 text-xs flex items-center gap-1">
-                            <MapPin size={12} className="text-amber-600" /> {event.venue}
-                          </span>
-                        )}
-                        {event.time && (
-                          <span className="text-slate-500 text-xs flex items-center gap-1">
-                            <Clock size={12} className="text-amber-600" /> {event.time}
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="font-serif font-bold text-navy-950 text-lg sm:text-xl">
-                        {event.title}
-                      </h3>
-                      <p className="text-slate-600 text-xs sm:text-sm line-clamp-2 leading-relaxed">
-                        {event.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <HomeEventsSection initialEvents={upcomingEvents} />
 
       {/* ─── 10. ACHIEVEMENTS HIGHLIGHTS ──────────────────────────────────── */}
-      <section className="py-24 px-4 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-950 text-white relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(245, 158, 11, 0.4) 1px, transparent 0)',
-            backgroundSize: '24px 24px',
-          }}
-        />
-        <div className="relative max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Pride & Recognition"
-            title="School & Student Accolades"
-            subtitle="Honouring the pursuit of brilliance in academics, athletics, STEM competitions, and cultural arts"
-            light
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {achievements.map((ach) => (
-              <div
-                key={ach.id}
-                className="bg-navy-900/80 border border-navy-700/60 hover:border-amber-400/50 rounded-2xl p-7 text-white text-center hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 group"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
-                  <Award size={28} />
-                </div>
-                <span className="text-[11px] font-bold text-amber-400 uppercase tracking-widest block mb-1">
-                  {ach.year} · {ach.category}
-                </span>
-                <h3 className="font-serif font-bold text-base mb-2 leading-snug">
-                  {ach.title}
-                </h3>
-                <p className="text-slate-300 text-xs leading-relaxed line-clamp-3">
-                  {ach.description}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/achievements"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-8 py-3.5 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg"
-            >
-              View All Achievements <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeAchievementsSection initialAchievements={achievements} />
 
       {/* ─── 11. PHOTO GALLERY PREVIEW WITH LIGHTBOX ──────────────────────── */}
       <section className="py-24 px-4 bg-white">

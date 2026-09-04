@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useEnquiries } from '@/lib/cms/useCMS';
 import { AdmissionEnquiry } from '@/types';
 import { Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
@@ -16,79 +17,8 @@ import {
   X,
 } from 'lucide-react';
 
-const INITIAL_ENQUIRIES: AdmissionEnquiry[] = [
-  {
-    id: 'DPS-ENQ-101',
-    parent_name: 'Sunil Malhotra',
-    student_name: 'Aarav Malhotra',
-    class_applying: 'Pre-School (Nursery)',
-    phone: '+91 98112 34567',
-    email: 'sunil.malhotra@gmail.com',
-    date_of_birth: '2021-08-14',
-    address: 'Pocket B, Sector 3, Rohini, Delhi',
-    message: 'Interested in AC school bus facility from Sector 3 pocket B. Looking for nursery morning shift.',
-    status: 'Pending',
-    created_at: '2025-06-16T09:30:00Z',
-  },
-  {
-    id: 'DPS-ENQ-102',
-    parent_name: 'Meera Chawla',
-    student_name: 'Kavya Chawla',
-    class_applying: 'Class XI (Science - PCM)',
-    phone: '+91 98711 22334',
-    email: 'meera.chawla@yahoo.com',
-    date_of_birth: '2009-04-10',
-    address: 'Prashant Vihar, Rohini, Delhi',
-    message: 'Scored 94.2% in Class X CBSE. Interested in PCM with Computer Science and JEE foundation batch.',
-    status: 'Contacted',
-    admin_notes: 'Spoke with parent on June 16. Scheduled entrance interaction for Saturday 11:00 AM.',
-    created_at: '2025-06-15T14:20:00Z',
-  },
-  {
-    id: 'DPS-ENQ-103',
-    parent_name: 'Vikram Batra',
-    student_name: 'Rohan Batra',
-    class_applying: 'Class I',
-    phone: '+91 99100 88776',
-    email: 'vikram.batra@outlook.com',
-    date_of_birth: '2019-11-22',
-    address: 'Pitampura, Delhi - 110034',
-    message: 'Transfer admission from Mumbai school due to defense posting. Transfer Certificate & report cards ready.',
-    status: 'Under Review',
-    admin_notes: 'TC verification in progress. Sent confirmation email to parent.',
-    created_at: '2025-06-14T11:15:00Z',
-  },
-  {
-    id: 'DPS-ENQ-104',
-    parent_name: 'Pooja Aggarwal',
-    student_name: 'Dev Aggarwal',
-    class_applying: 'Class VI',
-    phone: '+91 98101 44556',
-    email: 'pooja.agg@gmail.com',
-    date_of_birth: '2014-02-18',
-    address: 'Pocket 9, Sector 9, Rohini, Delhi',
-    message: 'Interested in sports facilities, specifically football coaching and robotics lab.',
-    status: 'Admitted',
-    admin_notes: 'Admission fee deposited. Enrolment ID: DPS-2025-482. Uniform & books issued.',
-    created_at: '2025-06-12T16:45:00Z',
-  },
-  {
-    id: 'DPS-ENQ-105',
-    parent_name: 'Rajesh Sharma',
-    student_name: 'Ananya Sharma',
-    class_applying: 'Pre-Primary (KG)',
-    phone: '+91 98188 99001',
-    email: 'rajesh.sharma@tcs.com',
-    date_of_birth: '2020-05-19',
-    address: 'Sector 8, Rohini, Delhi',
-    message: 'Looking for siblings admission next year as well. Please share fee installment schedule.',
-    status: 'Pending',
-    created_at: '2025-06-11T10:15:00Z',
-  },
-];
-
 export default function AdminAdmissionsPage() {
-  const [enquiries, setEnquiries] = useState<AdmissionEnquiry[]>(INITIAL_ENQUIRIES);
+  const { enquiries, setEnquiries, updateEnquiryStatus, deleteEnquiry } = useEnquiries();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedEnquiry, setSelectedEnquiry] = useState<AdmissionEnquiry | null>(null);

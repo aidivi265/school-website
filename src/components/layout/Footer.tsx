@@ -1,7 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { School } from '@/types';
+import { useSiteSettings } from '@/lib/cms/useCMS';
 
 function IconFacebook() {
   return (
@@ -56,7 +59,8 @@ const moreLinks = [
   { label: 'Contact & Location', href: '/contact' },
 ];
 
-export default function Footer({ school }: { school: School }) {
+export default function Footer({ school: initialSchool }: { school: School }) {
+  const { settings: school } = useSiteSettings(initialSchool);
   const socialLinks = [
     { icon: IconFacebook, href: school.social_facebook || '#', label: 'Facebook' },
     { icon: IconInstagram, href: school.social_instagram || '#', label: 'Instagram' },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockEvents } from '@/lib/data/mockData';
+import { useEvents } from '@/lib/cms/useCMS';
 import { EventItem } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
@@ -12,7 +12,7 @@ import ImageUploader from '@/components/admin/ImageUploader';
 import EmptyState from '@/components/admin/EmptyState';
 
 export default function AdminEventsPage() {
-  const [events, setEvents] = useState<EventItem[]>(mockEvents);
+  const { events, setEvents, upsertEvent, deleteEvent } = useEvents();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'upcoming' | 'past'>('all');
   const [editingEvent, setEditingEvent] = useState<EventItem | null>(null);

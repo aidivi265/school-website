@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useNotices } from '@/lib/cms/useCMS';
 import { Notice } from '@/types';
 import { Badge, Card, Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
@@ -9,11 +10,14 @@ import { Search, Calendar, FileText, Download, X, ArrowRight } from 'lucide-reac
 const CATEGORIES = ['All', 'Admissions', 'Examination', 'Holiday', 'Achievement', 'Event', 'Circular', 'General'];
 
 export default function NoticesClient({ initialNotices }: { initialNotices: Notice[] }) {
+  const { notices: liveNotices } = useNotices(initialNotices);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeNotice, setActiveNotice] = useState<Notice | null>(null);
 
-  const filteredNotices = initialNotices.filter((n) => {
+  const publishedNotices = liveNotices.filter((n) => n.is_published !== false);
+
+  const filteredNotices = publishedNotices.filter((n) => {
     const matchesCat = selectedCategory === 'All' || n.category === selectedCategory;
     const matchesSearch =
       n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

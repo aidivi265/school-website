@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockGalleryImages, mockGalleryAlbums } from '@/lib/data/mockData';
+import { useGallery } from '@/lib/cms/useCMS';
 import { GalleryImage, GalleryAlbum } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import ImageUploader from '@/components/admin/ImageUploader';
@@ -21,8 +21,7 @@ import {
 
 export default function AdminGalleryPage() {
   const [activeTab, setActiveTab] = useState<'photos' | 'albums'>('photos');
-  const [images, setImages] = useState<GalleryImage[]>(mockGalleryImages);
-  const [albums, setAlbums] = useState<GalleryAlbum[]>(mockGalleryAlbums);
+  const { images, albums, setImages, setAlbums, upsertGalleryImage, deleteGalleryImage, upsertAlbum, deleteAlbum } = useGallery();
 
   // Filters & Search
   const [search, setSearch] = useState('');

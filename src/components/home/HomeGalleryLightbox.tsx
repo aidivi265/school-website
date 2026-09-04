@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import { GalleryImage } from '@/types';
 import { ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useGallery } from '@/lib/cms/useCMS';
 
-export default function HomeGalleryLightbox({ images }: { images: GalleryImage[] }) {
+export default function HomeGalleryLightbox({ images: initialImages }: { images: GalleryImage[] }) {
+  const { images: liveImages } = useGallery(initialImages);
+  const images = liveImages.slice(0, 8);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const openModal = (idx: number) => setActiveIndex(idx);
