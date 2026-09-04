@@ -1,5 +1,7 @@
 -- ==============================================================================
--- seed.sql (Combined Supabase Seed Data for Testing)
+-- 004_seed_data.sql
+-- DEMO DATA SEED SCRIPT FOR DECENT PUBLIC SCHOOL, ROHINI
+-- To remove demo data later: DELETE FROM schools WHERE id = 'a1000000-0000-0000-0000-000000000001';
 -- ==============================================================================
 
 -- 1. SCHOOL RECORD
@@ -73,7 +75,7 @@ INSERT INTO site_settings (school_id, setting_key, setting_value) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'whatsapp_number', '+919871100000')
 ON CONFLICT (school_id, setting_key) DO UPDATE SET setting_value = EXCLUDED.setting_value;
 
--- 3. FACULTY
+-- 3. FACULTY (5+ Members)
 INSERT INTO faculty (school_id, name, designation, department, subject, qualification, experience_years, photo_url, bio, display_order, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'Dr. Ananya Sharma', 'Principal', 'Administration', 'Educational Administration', 'Ph.D. (Education), M.Sc., M.Ed., UGC-NET', '24+ Years', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&q=80', 'Distinguished educationist with over two decades of transformative leadership in progressive CBSE schools.', 1, true),
   ('a1000000-0000-0000-0000-000000000001', 'Mr. Rajesh K. Verma', 'Vice Principal & PGT Physics', 'Science Department', 'Physics', 'M.Sc. (Physics), B.Ed., CTET', '19+ Years', 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&q=80', 'Passionate physics educator known for experimental demonstrations and board examination mentoring.', 2, true),
@@ -83,7 +85,7 @@ INSERT INTO faculty (school_id, name, designation, department, subject, qualific
   ('a1000000-0000-0000-0000-000000000001', 'Mrs. Rachna Gupta', 'PGT Commerce & Economics', 'Commerce Department', 'Accountancy & Economics', 'M.Com, M.Phil., B.Ed.', '15+ Years', 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&q=80', 'Expert mentor in commerce studies fostering financial acumen and corporate ethics.', 6, true)
 ON CONFLICT (id) DO NOTHING;
 
--- 4. NOTICES
+-- 4. NOTICES (5+ Items)
 INSERT INTO notices (school_id, title, description, content, category, date, image_url, document_url, is_pinned, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'Admissions Open for Session 2025–26 (Pre-School to Class XI)', 'Registration open for General and EWS categories as per Directorate of Education guidelines.', 'Detailed guidelines, seat availability, age eligibility criteria, and fee structure are available on the school website and at the admission counter.', 'Admissions', '2025-01-15', 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80', '#', true, true),
   ('a1000000-0000-0000-0000-000000000001', 'Schedule for Pre-Board II & Annual Term Examinations 2024–25', 'Date sheet for Classes IX to XII has been finalized by the Academic Examination Cell.', 'Parents are requested to ensure regular attendance and revision schedules. Detailed date sheet PDF is downloadable.', 'Examination', '2025-01-10', 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80', '#', true, true),
@@ -92,7 +94,7 @@ INSERT INTO notices (school_id, title, description, content, category, date, ima
   ('a1000000-0000-0000-0000-000000000001', 'Winter Break Circular & Online Enrichment Programme', 'School will observe winter break as per Delhi Govt circular; optional online doubt clearing available.', 'Circular for winter vacation guidelines and assignments has been uploaded to the downloads section.', 'Holiday', '2024-12-24', 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=80', '#', false, true)
 ON CONFLICT (id) DO NOTHING;
 
--- 5. EVENTS
+-- 5. EVENTS (4+ Items)
 INSERT INTO events (school_id, title, description, event_date, event_time, venue, category, status, cover_image_url, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'Annual Sports Day 2025 (Udaan)', 'Inter-house athletic meet featuring track races, martial arts displays, yoga formations, and relay championships.', '2025-01-24', '8:30 AM – 1:30 PM', 'Main Athletic Ground, DPS Rohini', 'Sports', 'upcoming', 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80', true),
   ('a1000000-0000-0000-0000-000000000001', '76th Republic Day Celebration & March Past', 'Flag hoisting ceremony, patriotic choir songs, inter-class fancy dress and cultural dances.', '2025-01-25', '9:00 AM – 11:30 AM', 'School Auditorium & Quadrangle', 'Celebration', 'upcoming', 'https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=800&q=80', true),
@@ -100,7 +102,7 @@ INSERT INTO events (school_id, title, description, event_date, event_time, venue
   ('a1000000-0000-0000-0000-000000000001', 'Grand Annual Cultural Fiesta "Tarang 2024"', 'Spectacular evening of classical ballet, theatrical dramatics, orchestra ensembles, and student award distribution.', '2024-11-20', '5:00 PM – 8:30 PM', 'Siri Fort Auditorium, New Delhi', 'Cultural', 'past', 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80', true)
 ON CONFLICT (id) DO NOTHING;
 
--- 6. GALLERY
+-- 6. GALLERY ALBUMS & IMAGES
 INSERT INTO gallery_albums (id, school_id, title, description, cover_image_url, category, event_date, published) VALUES
   ('b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 'Campus & Smart Infrastructure', 'State-of-the-art classrooms, libraries, laboratories, and sports grounds.', 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80', 'campus', '2024-10-15', true),
   ('b1000000-0000-0000-0000-000000000002', 'a1000000-0000-0000-0000-000000000001', 'Annual Sports Meet & Athletic Triumphs', 'Memorable moments from track and field events, basketball matches, and yoga.', 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80', 'sports', '2024-11-05', true),
@@ -120,7 +122,7 @@ INSERT INTO gallery_images (album_id, school_id, title, image_url, category, dis
   ('b1000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 'Primary Wing Art & Craft Exhibition', 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80', 'activities', 10)
 ON CONFLICT (id) DO NOTHING;
 
--- 7. ACHIEVEMENTS
+-- 7. ACHIEVEMENTS (5+ Items)
 INSERT INTO achievements (school_id, title, description, category, year, icon, is_highlight, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', '100% Pass Rate in CBSE Board Class X & XII', 'Outstanding board examination performance with over 45 students scoring above 90% aggregate in 2024.', 'academic', '2024', 'trophy', true, true),
   ('a1000000-0000-0000-0000-000000000001', 'National Science Olympiad (NSO) All India Rank 14', 'Master Aarav Sharma of Class X secured AIR 14 and a gold medal at the National Science Olympiad.', 'academic', '2024', 'star', true, true),
@@ -129,7 +131,7 @@ INSERT INTO achievements (school_id, title, description, category, year, icon, i
   ('a1000000-0000-0000-0000-000000000001', 'First Prize at National Level Model United Nations (MUN)', 'School delegation won the Best Delegation Trophy at the Delhi International MUN 2023.', 'cultural', '2023', 'trophy', false, true)
 ON CONFLICT (id) DO NOTHING;
 
--- 8. DOCUMENTS
+-- 8. DOCUMENTS (8+ Items)
 INSERT INTO documents (school_id, title, description, category, file_url, file_name, file_size, file_type, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'Admission Registration Form 2025–26', 'Printable admission form for Pre-School to Class XI with instructions.', 'Admission Forms', '#', 'admission_form_2025_26.pdf', '1.2 MB', 'PDF', true),
   ('a1000000-0000-0000-0000-000000000001', 'School Prospectus & Information Brochure', 'Comprehensive overview of school curriculum, faculty, sports facilities, and rules.', 'Admission Forms', '#', 'school_prospectus.pdf', '4.8 MB', 'PDF', true),
@@ -141,7 +143,7 @@ INSERT INTO documents (school_id, title, description, category, file_url, file_n
   ('a1000000-0000-0000-0000-000000000001', 'Transfer Certificate (TC) Application Form', 'Official requisition form for student transfer certificates and clearance.', 'Important Forms', '#', 'tc_application_form.pdf', '480 KB', 'PDF', true)
 ON CONFLICT (id) DO NOTHING;
 
--- 9. FAQS
+-- 9. FAQS (10+ Items)
 INSERT INTO faqs (school_id, question, answer, keywords, category, display_order, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'What is the admission procedure for Pre-School (Nursery) for session 2025–26?', 'Admissions for Nursery follow Directorate of Education (DoE) Delhi guidelines based on a 100-point criteria (neighborhood distance, sibling, alumni). Parents can fill the online enquiry form or submit the physical registration form at the school desk.', ARRAY['nursery', 'admission', 'process', 'criteria', 'points', 'doe', 'forms'], 'Admissions', 1, true),
   ('a1000000-0000-0000-0000-000000000001', 'What are the school and administrative office timings?', 'School timings for students: 7:45 AM to 2:00 PM (Monday to Saturday; 2nd & 4th Saturdays are off for primary students). Administrative Office: 8:30 AM to 4:00 PM.', ARRAY['timings', 'hours', 'office', 'schedule', 'saturday', 'open', 'close'], 'Timings & Schedule', 2, true),
@@ -155,7 +157,7 @@ INSERT INTO faqs (school_id, question, answer, keywords, category, display_order
   ('a1000000-0000-0000-0000-000000000001', 'Are parent-teacher meetings (PTM) conducted regularly?', 'Yes, regular Parent-Teacher Meetings are held after every assessment cycle to share detailed student progress reports, address concerns, and foster collaborative parent-educator partnerships.', ARRAY['ptm', 'parents', 'meeting', 'feedback', 'progress', 'report card'], 'General', 10, true)
 ON CONFLICT (id) DO NOTHING;
 
--- 10. FACILITIES
+-- 10. FACILITIES (8 Items)
 INSERT INTO facilities (school_id, title, image_url, description, features, display_order, published) VALUES
   ('a1000000-0000-0000-0000-000000000001', 'Smart Digital Classrooms', 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=80', 'Air-conditioned smart learning spaces equipped with 4K touch displays, digital lesson libraries, and acoustic sound systems.', ARRAY['4K Interactive Panels', 'Audio-Visual Modules', 'Ergonomic Seating', 'Wi-Fi Enabled'], 1, true),
   ('a1000000-0000-0000-0000-000000000001', 'Composite Science Laboratories', 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80', 'State-of-the-art specialized laboratories for Physics, Chemistry, and Biology complying with CBSE experimental norms.', ARRAY['Individual Workstations', 'Digital Microscopes', 'Safety Fume Hoods', 'First-Aid & Eyewash'], 2, true),

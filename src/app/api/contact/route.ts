@@ -1,30 +1,48 @@
 import { NextResponse } from 'next/server';
-import { submitContactMessage } from '@/lib/supabase/service';
+import { createContactMessage } from '@/lib/supabase/service';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, email, phone, subject, message } = body;
 
-    if (!name || !email || !message) {
+    if (!name?.trim() || !email?.trim() || !message?.trim()) {
       return NextResponse.json(
-        { success: false, message: 'Please provide your name, email, and message.' },
+        {
+          success: false,
+          message: 'Please provide all required fields (Name, Email, Message).',
+        },
         { status: 400 }
       );
     }
 
-    const result = await submitContactMessage({
-      name,
-      email,
-      phone: phone || '',
-      subject: subject || 'General Query',
-      message,
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Please provide a valid email address.',
+        },
+        { status: 400 }
+      );
+    }
+
+    const result = await createContactMessage({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone?.trim() || undefined,
+      subject: subject?.trim() || 'General Query',
+      message: message.trim(),
     });
 
     return NextResponse.json(result);
   } catch (error) {
+    console.error('Contact API error:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to submit contact message.' },
+      {
+        success: false,
+        message: 'Failed to submit contact message. Please try again or call the school office.',
+      },
       { status: 500 }
     );
   }

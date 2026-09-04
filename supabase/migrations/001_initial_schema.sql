@@ -1,11 +1,12 @@
 -- ==============================================================================
--- schema.sql (Combined Supabase PostgreSQL Schema, RLS, & Storage)
--- Decent Public School, Rohini - Multi-tenant School Management System
+-- 001_initial_schema.sql
+-- Decent Public School, Rohini - Supabase PostgreSQL Schema
 -- ==============================================================================
 
+-- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 1. SCHOOLS
+-- 1. SCHOOLS TABLE
 CREATE TABLE IF NOT EXISTS schools (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT UNIQUE NOT NULL DEFAULT 'decent-public-school',
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS schools (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 2. PROFILES
+-- 2. PROFILES TABLE (Linked with Supabase Auth users)
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -48,7 +49,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   UNIQUE(user_id)
 );
 
--- 3. PAGES
+-- 3. PAGES TABLE (Dynamic & editable page content)
 CREATE TABLE IF NOT EXISTS pages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS pages (
   UNIQUE(school_id, slug)
 );
 
--- 4. FACULTY
+-- 4. FACULTY TABLE
 CREATE TABLE IF NOT EXISTS faculty (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -83,7 +84,7 @@ CREATE TABLE IF NOT EXISTS faculty (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 5. NOTICES
+-- 5. NOTICES TABLE
 CREATE TABLE IF NOT EXISTS notices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -101,12 +102,13 @@ CREATE TABLE IF NOT EXISTS notices (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Indexes for notices
 CREATE INDEX IF NOT EXISTS idx_notices_school_id ON notices(school_id);
 CREATE INDEX IF NOT EXISTS idx_notices_date ON notices(date DESC);
 CREATE INDEX IF NOT EXISTS idx_notices_published ON notices(published);
 CREATE INDEX IF NOT EXISTS idx_notices_category ON notices(category);
 
--- 6. EVENTS
+-- 6. EVENTS TABLE
 CREATE TABLE IF NOT EXISTS events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -129,7 +131,7 @@ CREATE INDEX IF NOT EXISTS idx_events_school_id ON events(school_id);
 CREATE INDEX IF NOT EXISTS idx_events_date ON events(event_date ASC);
 CREATE INDEX IF NOT EXISTS idx_events_published ON events(published);
 
--- 7. GALLERY ALBUMS
+-- 7. GALLERY ALBUMS TABLE
 CREATE TABLE IF NOT EXISTS gallery_albums (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -144,7 +146,9 @@ CREATE TABLE IF NOT EXISTS gallery_albums (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 8. GALLERY IMAGES
+CREATE INDEX IF NOT EXISTS idx_albums_school_id ON gallery_albums(school_id);
+
+-- 8. GALLERY IMAGES TABLE
 CREATE TABLE IF NOT EXISTS gallery_images (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   album_id UUID REFERENCES gallery_albums(id) ON DELETE CASCADE,
@@ -161,7 +165,7 @@ CREATE TABLE IF NOT EXISTS gallery_images (
 CREATE INDEX IF NOT EXISTS idx_gallery_album_id ON gallery_images(album_id);
 CREATE INDEX IF NOT EXISTS idx_gallery_school_id ON gallery_images(school_id);
 
--- 9. ACHIEVEMENTS
+-- 9. ACHIEVEMENTS TABLE
 CREATE TABLE IF NOT EXISTS achievements (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -179,7 +183,9 @@ CREATE TABLE IF NOT EXISTS achievements (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 10. DOCUMENTS
+CREATE INDEX IF NOT EXISTS idx_achievements_school_id ON achievements(school_id);
+
+-- 10. DOCUMENTS & DOWNLOADS TABLE
 CREATE TABLE IF NOT EXISTS documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -195,7 +201,10 @@ CREATE TABLE IF NOT EXISTS documents (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 11. ADMISSION ENQUIRIES
+CREATE INDEX IF NOT EXISTS idx_documents_school_id ON documents(school_id);
+CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category);
+
+-- 11. ADMISSION ENQUIRIES TABLE
 CREATE TABLE IF NOT EXISTS admission_enquiries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -213,9 +222,11 @@ CREATE TABLE IF NOT EXISTS admission_enquiries (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE INDEX IF NOT EXISTS idx_enquiries_school_id ON admission_enquiries(school_id);
 CREATE INDEX IF NOT EXISTS idx_enquiries_status ON admission_enquiries(status);
+CREATE INDEX IF NOT EXISTS idx_enquiries_created ON admission_enquiries(created_at DESC);
 
--- 12. FAQS
+-- 12. FAQS TABLE
 CREATE TABLE IF NOT EXISTS faqs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -229,7 +240,10 @@ CREATE TABLE IF NOT EXISTS faqs (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 13. SITE SETTINGS
+CREATE INDEX IF NOT EXISTS idx_faqs_school_id ON faqs(school_id);
+CREATE INDEX IF NOT EXISTS idx_faqs_category ON faqs(category);
+
+-- 13. SITE SETTINGS TABLE
 CREATE TABLE IF NOT EXISTS site_settings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -240,7 +254,9 @@ CREATE TABLE IF NOT EXISTS site_settings (
   UNIQUE(school_id, setting_key)
 );
 
--- 14. FACILITIES
+CREATE INDEX IF NOT EXISTS idx_settings_school_id ON site_settings(school_id);
+
+-- 14. FACILITIES TABLE
 CREATE TABLE IF NOT EXISTS facilities (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -255,7 +271,7 @@ CREATE TABLE IF NOT EXISTS facilities (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 15. CONTACT MESSAGES
+-- 15. CONTACT MESSAGES TABLE
 CREATE TABLE IF NOT EXISTS contact_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -267,87 +283,3 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   is_read BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now()
 );
-
--- ==============================================================================
--- ROW LEVEL SECURITY
--- ==============================================================================
-ALTER TABLE schools ENABLE ROW LEVEL SECURITY;
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE pages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE faculty ENABLE ROW LEVEL SECURITY;
-ALTER TABLE notices ENABLE ROW LEVEL SECURITY;
-ALTER TABLE events ENABLE ROW LEVEL SECURITY;
-ALTER TABLE gallery_albums ENABLE ROW LEVEL SECURITY;
-ALTER TABLE gallery_images ENABLE ROW LEVEL SECURITY;
-ALTER TABLE achievements ENABLE ROW LEVEL SECURITY;
-ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
-ALTER TABLE admission_enquiries ENABLE ROW LEVEL SECURITY;
-ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE facilities ENABLE ROW LEVEL SECURITY;
-ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
-
-CREATE OR REPLACE FUNCTION is_school_admin(target_school_id UUID)
-RETURNS BOOLEAN AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM profiles
-    WHERE profiles.user_id = auth.uid()
-    AND (
-      profiles.role = 'super_admin'
-      OR (profiles.school_id = target_school_id AND profiles.role IN ('school_admin', 'editor'))
-    )
-  );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE POLICY "Public can view school details" ON schools FOR SELECT USING (true);
-CREATE POLICY "Admins can update their school" ON schools FOR UPDATE USING (is_school_admin(id));
-
-CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Super admins manage profiles" ON profiles FOR ALL USING (
-  EXISTS (SELECT 1 FROM profiles WHERE user_id = auth.uid() AND role = 'super_admin')
-);
-
-CREATE POLICY "Public view pages" ON pages FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage pages" ON pages FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view faculty" ON faculty FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage faculty" ON faculty FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view notices" ON notices FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage notices" ON notices FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view events" ON events FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage events" ON events FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view albums" ON gallery_albums FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage albums" ON gallery_albums FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view gallery images" ON gallery_images FOR SELECT USING (true);
-CREATE POLICY "Admins manage gallery images" ON gallery_images FOR ALL USING (
-  is_school_admin(school_id) OR EXISTS (
-    SELECT 1 FROM gallery_albums WHERE gallery_albums.id = gallery_images.album_id AND is_school_admin(gallery_albums.school_id)
-  )
-);
-
-CREATE POLICY "Public view achievements" ON achievements FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage achievements" ON achievements FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view documents" ON documents FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage documents" ON documents FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public submit enquiries" ON admission_enquiries FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admins manage enquiries" ON admission_enquiries FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view faqs" ON faqs FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage faqs" ON faqs FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view settings" ON site_settings FOR SELECT USING (true);
-CREATE POLICY "Admins manage settings" ON site_settings FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public view facilities" ON facilities FOR SELECT USING (published = true);
-CREATE POLICY "Admins manage facilities" ON facilities FOR ALL USING (is_school_admin(school_id));
-
-CREATE POLICY "Public submit messages" ON contact_messages FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admins manage messages" ON contact_messages FOR ALL USING (is_school_admin(school_id));
