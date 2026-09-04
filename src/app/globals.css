@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-50: #f0f4fa;
+  --color-navy-100: #dae4f2;
+  --color-navy-200: #b8cde6;
+  --color-navy-300: #8bb0d5;
+  --color-navy-400: #588ec0;
+  --color-navy-500: #3873a8;
+  --color-navy-600: #275b8c;
+  --color-navy-700: #1f4871;
+  --color-navy-800: #1c3d5e;
+  --color-navy-900: #152945;
+  --color-navy-950: #0e1e42;
+
+  --color-gold-50: #fdfbf7;
+  --color-gold-100: #fbf5eb;
+  --color-gold-200: #f5e7cb;
+  --color-gold-300: #eed3a5;
+  --color-gold-400: #e5b870;
+  --color-gold-500: #d99b38;
+  --color-gold-600: #b87c24;
+  --color-gold-700: #925c1b;
+  --color-gold-800: #75471c;
+  --color-gold-900: #613a1b;
+
+  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #334155;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(to right, #f59e0b, #fbbf24, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
