@@ -105,9 +105,11 @@ export type GalleryAlbum = {
   title: string;
   slug?: string;
   description?: string;
-  category: 'all' | 'campus' | 'classrooms' | 'events' | 'sports' | 'activities' | 'celebrations';
+  category?: 'all' | 'campus' | 'classrooms' | 'events' | 'sports' | 'activities' | 'celebrations' | string;
   cover_image_url: string;
   date?: string;
+  event_date?: string;
+  photo_count?: number;
   sort_order?: number;
   is_published?: boolean;
   images?: GalleryImage[];
@@ -197,6 +199,7 @@ export type FAQItem = {
   category: 'Admissions' | 'Academics' | 'Transport & Facilities' | 'Timings & Schedule' | 'Fees & Payments' | 'General';
   keywords?: string[];
   sort_order?: number;
+  display_order?: number;
   is_published?: boolean;
   created_at?: string;
   updated_at?: string;

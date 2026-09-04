@@ -5,13 +5,21 @@ import { mockNotices } from '@/lib/data/mockData';
 import { Notice } from '@/types';
 import { Button, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
-import { Plus, Edit2, Trash2, Pin, Check, X, Search, FileText, Upload } from 'lucide-react';
+import { Plus, Edit2, Trash2, Pin, Search, Download, Calendar, Filter, X } from 'lucide-react';
+import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Toast, { ToastMessage } from '@/components/admin/Toast';
+import ImageUploader from '@/components/admin/ImageUploader';
+import FileUploader from '@/components/admin/FileUploader';
+import EmptyState from '@/components/admin/EmptyState';
 
 export default function AdminNoticesPage() {
   const [notices, setNotices] = useState<Notice[]>(mockNotices);
   const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [toast, setToast] = useState<ToastMessage | null>(null);
 
   // Form State
   const [form, setForm] = useState({
@@ -25,6 +33,10 @@ export default function AdminNoticesPage() {
     is_pinned: false,
     is_published: true,
   });
+
+  const showToast = (text: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setToast({ id: String(Date.now()), type, text });
+  };
 
   const handleOpenCreate = () => {
     setEditingNotice(null);
@@ -64,42 +76,76 @@ export default function AdminNoticesPage() {
       setNotices((prev) =>
         prev.map((n) => (n.id === editingNotice.id ? { ...n, ...form } : n))
       );
+      showToast('Notice updated successfully.');
     } else {
       const newNotice: Notice = {
         id: 'n-' + Date.now(),
         ...form,
       };
       setNotices([newNotice, ...notices]);
+      showToast('New notice published successfully.');
     }
     setIsModalOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this notice?')) {
-      setNotices(notices.filter((n) => n.id !== id));
+  const confirmDelete = () => {
+    if (deleteTargetId) {
+      setNotices(notices.filter((n) => n.id !== deleteTargetId));
+      setDeleteTargetId(null);
+      showToast('Notice deleted successfully.', 'info');
     }
   };
 
   const togglePin = (id: string) => {
     setNotices((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_pinned: !n.is_pinned } : n))
+      prev.map((n) => {
+        if (n.id === id) {
+          const nextVal = !n.is_pinned;
+          showToast(nextVal ? 'Notice pinned to top.' : 'Notice unpinned.');
+          return { ...n, is_pinned: nextVal };
+        }
+        return n;
+      })
     );
   };
 
   const togglePublish = (id: string) => {
     setNotices((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_published: !n.is_published } : n))
+      prev.map((n) => {
+        if (n.id === id) {
+          const nextVal = !n.is_published;
+          showToast(nextVal ? 'Notice published to live website.' : 'Notice saved as draft.');
+          return { ...n, is_published: nextVal };
+        }
+        return n;
+      })
     );
   };
 
-  const filtered = notices.filter(
-    (n) =>
+  const categories = ['All', 'Admissions', 'Examination', 'Holiday', 'Achievement', 'Event', 'Circular', 'General', 'Urgent'];
+
+  const filtered = notices.filter((n) => {
+    const matchesCat = selectedCategory === 'All' || n.category === selectedCategory;
+    const matchesSearch =
       n.title.toLowerCase().includes(search.toLowerCase()) ||
-      n.category.toLowerCase().includes(search.toLowerCase())
-  );
+      n.description.toLowerCase().includes(search.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
 
   return (
     <div className="space-y-6">
+      {/* Toast Notification */}
+      <Toast message={toast} onClose={() => setToast(null)} />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={!!deleteTargetId}
+        title="Delete School Notice"
+        message="Are you sure you want to delete this notice? It will be immediately removed from the live website."
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
+
       {/* Page Title & Add Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -111,90 +157,117 @@ export default function AdminNoticesPage() {
         </Button>
       </div>
 
-      {/* Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
-        <Search size={18} className="text-slate-400" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search notices by title or category..."
-          className="w-full text-xs sm:text-sm bg-transparent focus:outline-none text-slate-900"
-        />
-      </div>
+      {/* Search & Filter Bar */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 no-scrollbar">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                selectedCategory === cat
+                  ? 'bg-slate-900 text-amber-300 shadow-sm font-bold'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
-              <tr>
-                <th className="p-4">Notice Title</th>
-                <th className="p-4">Category</th>
-                <th className="p-4">Date</th>
-                <th className="p-4">Pinned</th>
-                <th className="p-4">Status</th>
-                <th className="p-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((n) => (
-                <tr key={n.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="p-4 max-w-sm">
-                    <p className="font-bold text-slate-900 line-clamp-1">{n.title}</p>
-                    <p className="text-[11px] text-slate-500 line-clamp-1">{n.description}</p>
-                  </td>
-                  <td className="p-4">
-                    <Badge variant={n.category === 'Admissions' ? 'amber' : 'navy'}>
-                      {n.category}
-                    </Badge>
-                  </td>
-                  <td className="p-4 text-slate-600 whitespace-nowrap">{formatDate(n.date)}</td>
-                  <td className="p-4">
-                    <button
-                      onClick={() => togglePin(n.id)}
-                      className={`p-1.5 rounded-lg text-xs font-semibold ${
-                        n.is_pinned ? 'bg-amber-100 text-amber-800' : 'text-slate-400 hover:bg-slate-100'
-                      }`}
-                      title={n.is_pinned ? 'Pinned notice' : 'Click to pin'}
-                    >
-                      <Pin size={15} />
-                    </button>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={() => togglePublish(n.id)}
-                      className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                        n.is_published !== false
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-slate-100 text-slate-500'
-                      }`}
-                    >
-                      {n.is_published !== false ? 'Published' : 'Draft'}
-                    </button>
-                  </td>
-                  <td className="p-4 text-right space-x-2 whitespace-nowrap">
-                    <button
-                      onClick={() => handleOpenEdit(n)}
-                      className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
-                      title="Edit Notice"
-                    >
-                      <Edit2 size={15} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(n.id)}
-                      className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors"
-                      title="Delete Notice"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search notices..."
+            className="w-full text-xs sm:text-sm pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900"
+          />
         </div>
       </div>
+
+      {/* Data Table */}
+      {filtered.length > 0 ? (
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
+                <tr>
+                  <th className="p-4">Notice Title</th>
+                  <th className="p-4">Category</th>
+                  <th className="p-4">Date</th>
+                  <th className="p-4">Pinned</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filtered.map((n) => (
+                  <tr key={n.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="p-4 max-w-sm">
+                      <p className="font-bold text-slate-900 line-clamp-1">{n.title}</p>
+                      <p className="text-[11px] text-slate-500 line-clamp-1">{n.description}</p>
+                    </td>
+                    <td className="p-4">
+                      <Badge variant={n.category === 'Admissions' ? 'amber' : 'navy'}>
+                        {n.category}
+                      </Badge>
+                    </td>
+                    <td className="p-4 text-slate-600 whitespace-nowrap">{formatDate(n.date)}</td>
+                    <td className="p-4">
+                      <button
+                        onClick={() => togglePin(n.id)}
+                        className={`p-1.5 rounded-lg text-xs font-semibold ${
+                          n.is_pinned ? 'bg-amber-100 text-amber-800' : 'text-slate-400 hover:bg-slate-100'
+                        }`}
+                        title={n.is_pinned ? 'Pinned notice' : 'Click to pin'}
+                      >
+                        <Pin size={15} />
+                      </button>
+                    </td>
+                    <td className="p-4">
+                      <button
+                        onClick={() => togglePublish(n.id)}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase transition-colors ${
+                          n.is_published !== false
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 text-slate-500'
+                        }`}
+                      >
+                        {n.is_published !== false ? 'Published' : 'Draft'}
+                      </button>
+                    </td>
+                    <td className="p-4 text-right space-x-2 whitespace-nowrap">
+                      <button
+                        onClick={() => handleOpenEdit(n)}
+                        className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+                        title="Edit Notice"
+                      >
+                        <Edit2 size={15} />
+                      </button>
+                      <button
+                        onClick={() => setDeleteTargetId(n.id)}
+                        className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors"
+                        title="Delete Notice"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <EmptyState
+          title="No notices found"
+          description="Try changing your search keywords or category filters, or publish a new school notice."
+          actionText="Create Notice"
+          onAction={handleOpenCreate}
+        />
+      )}
 
       {/* Edit / Create Modal */}
       {isModalOpen && (
@@ -223,7 +296,7 @@ export default function AdminNoticesPage() {
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="e.g. Admissions Open for Session 2025–26"
-                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
+                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500 text-slate-900"
                 />
               </div>
 
@@ -235,7 +308,7 @@ export default function AdminNoticesPage() {
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value as any })}
-                    className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
+                    className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500 text-slate-900"
                   >
                     {['Admissions', 'Examination', 'Holiday', 'Achievement', 'Event', 'Circular', 'General', 'Urgent'].map(
                       (cat) => (
@@ -256,7 +329,7 @@ export default function AdminNoticesPage() {
                     required
                     value={form.date}
                     onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
+                    className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500 text-slate-900"
                   />
                 </div>
               </div>
@@ -270,8 +343,8 @@ export default function AdminNoticesPage() {
                   required
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Brief 1-2 sentence overview for notice cards..."
-                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
+                  placeholder="Brief 1-2 sentence summary for notice cards..."
+                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500 text-slate-900"
                 />
               </div>
 
@@ -284,36 +357,24 @@ export default function AdminNoticesPage() {
                   value={form.content}
                   onChange={(e) => setForm({ ...form, content: e.target.value })}
                   placeholder="Detailed circular instructions, paragraphs, or guidelines..."
-                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
+                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500 text-slate-900"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                    Cover Image URL
-                  </label>
-                  <input
-                    type="url"
-                    value={form.image_url}
-                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                    placeholder="https://..."
-                    className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
-                  />
-                </div>
+                <ImageUploader
+                  bucket="notices"
+                  value={form.image_url}
+                  onChange={(url) => setForm({ ...form, image_url: url })}
+                  label="Notice Cover Image"
+                />
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                    Attachment / PDF URL
-                  </label>
-                  <input
-                    type="url"
-                    value={form.document_url}
-                    onChange={(e) => setForm({ ...form, document_url: e.target.value })}
-                    placeholder="https://.../notice.pdf"
-                    className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
-                  />
-                </div>
+                <FileUploader
+                  bucket="notices"
+                  value={form.document_url}
+                  onChange={(url) => setForm({ ...form, document_url: url })}
+                  label="Official PDF Attachment"
+                />
               </div>
 
               <div className="flex items-center gap-6 pt-2">
@@ -343,7 +404,7 @@ export default function AdminNoticesPage() {
                   Cancel
                 </Button>
                 <Button type="submit" variant="primary" size="md">
-                  {editingNotice ? 'Update Notice' : 'Create Notice'}
+                  {editingNotice ? 'Update Notice' : 'Publish Notice'}
                 </Button>
               </div>
             </form>
