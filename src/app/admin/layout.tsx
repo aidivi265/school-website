@@ -43,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [pathname, isLoginPage, router]);
 
   if (isLoginPage) {
-    return <div className="min-h-screen bg-slate-900 text-slate-100">{children}</div>;
+    return <div className="min-h-screen bg-slate-950">{children}</div>;
   }
 
   if (isCheckingAuth || !isAuthenticated) {

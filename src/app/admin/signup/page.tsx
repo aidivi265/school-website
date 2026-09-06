@@ -27,7 +27,8 @@ export default function AdminStaffSignupPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [designation, setDesignation] = useState('PGT Subject Teacher');
+  const [showPassword, setShowPassword] = useState(false);
+  const [designation, setDesignation] = useState('');
   const [selectedModules, setSelectedModules] = useState<string[]>(['notices', 'events']);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +43,12 @@ export default function AdminStaffSignupPage() {
     e.preventDefault();
     setError(null);
 
-    if (!email.includes('@')) {
+    if (!name.trim()) {
+      setError('Please enter your full name.');
+      return;
+    }
+
+    if (!email.trim() || !email.includes('@')) {
       setError('Please enter a valid school/official email address.');
       return;
     }
@@ -52,11 +58,16 @@ export default function AdminStaffSignupPage() {
       return;
     }
 
+    if (!designation.trim()) {
+      setError('Please enter your role or designation (e.g. PGT Chemistry, Sports Incharge).');
+      return;
+    }
+
     const res = registerStaffRequest({
-      name,
-      email,
-      password,
-      designation,
+      name: name.trim(),
+      email: email.trim(),
+      password: password.trim(),
+      designation: designation.trim(),
       requestedModules: selectedModules,
     });
 
@@ -72,7 +83,7 @@ export default function AdminStaffSignupPage() {
       <div className="max-w-xl w-full">
         {/* Crest & Title */}
         <div className="text-center mb-8">
-          <div className="inline-block mb-3">
+          <div className="inline-block mb-3 p-3 rounded-2xl bg-white/5 border border-white/10 shadow-lg">
             <SchoolCrest size={54} />
           </div>
           <h1 className="font-serif font-bold text-2xl sm:text-3xl text-white">
@@ -84,19 +95,19 @@ export default function AdminStaffSignupPage() {
         </div>
 
         {/* Form Container */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200">
+        <div className="bg-white rounded-3xl p-6 sm:p-9 shadow-2xl border border-slate-200">
           {!isSubmitted ? (
             <>
-              <div className="flex items-center gap-2.5 pb-4 mb-6 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
-                  <UserPlus size={20} />
+              <div className="flex items-center gap-3 pb-4 mb-6 border-b border-slate-100">
+                <div className="w-11 h-11 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-sm">
+                  <UserPlus size={22} />
                 </div>
                 <div>
                   <h2 className="font-serif font-bold text-xl text-slate-900">
                     Request Staff Portal Access
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Account requests require Principal / Super Admin authorization
+                    Your request will be sent to Principal Dr. Ananya Sharma for approval
                   </p>
                 </div>
               </div>
@@ -111,7 +122,7 @@ export default function AdminStaffSignupPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Full Name */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Staff Member Full Name *
                   </label>
                   <div className="relative">
@@ -122,15 +133,15 @@ export default function AdminStaffSignupPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Rahul Sharma"
-                      className="w-full text-xs sm:text-sm pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500"
+                      className="w-full text-sm pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-900 font-medium placeholder:text-slate-400 shadow-sm transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Email & Password */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Official Email Address *
                     </label>
                     <div className="relative">
@@ -141,32 +152,39 @@ export default function AdminStaffSignupPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="rahul@decentpublicschoolrohini.edu.in"
-                        className="w-full text-xs sm:text-sm pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500"
+                        className="w-full text-sm pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-900 font-medium placeholder:text-slate-400 shadow-sm transition-all"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Create Password *
                     </label>
                     <div className="relative">
                       <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Min 6 characters"
-                        className="w-full text-xs sm:text-sm pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500"
+                        className="w-full text-sm pl-10 pr-11 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-900 font-medium placeholder:text-slate-400 shadow-sm transition-all"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
                   </div>
                 </div>
 
                 {/* Designation */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Designation & Department *
                   </label>
                   <div className="relative">
@@ -176,8 +194,8 @@ export default function AdminStaffSignupPage() {
                       required
                       value={designation}
                       onChange={(e) => setDesignation(e.target.value)}
-                      placeholder="e.g. PGT Computer Science / Admission Coordinator / PRT Head"
-                      className="w-full text-xs sm:text-sm pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500"
+                      placeholder="e.g. PGT Computer Science / Admission Incharge / PRT Lead"
+                      className="w-full text-sm pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-900 font-medium placeholder:text-slate-400 shadow-sm transition-all"
                     />
                   </div>
                 </div>
@@ -187,15 +205,15 @@ export default function AdminStaffSignupPage() {
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                     Select Management Modules You Need Access To:
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1 border border-slate-100 rounded-xl bg-slate-50">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-52 overflow-y-auto p-1.5 border border-slate-200 rounded-xl bg-slate-50/70">
                     {MODULE_DEFINITIONS.slice(0, 8).map((mod) => {
                       const isChecked = selectedModules.includes(mod.id);
                       return (
                         <label
                           key={mod.id}
-                          className={`p-2.5 rounded-lg border text-xs font-medium flex items-center gap-2 cursor-pointer transition-colors ${
+                          className={`p-2.5 rounded-lg border text-xs font-medium flex items-center gap-2.5 cursor-pointer transition-colors ${
                             isChecked
-                              ? 'bg-amber-50 border-amber-400 text-amber-950 font-bold'
+                              ? 'bg-amber-50 border-amber-400 text-amber-950 font-bold shadow-xs'
                               : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                           }`}
                         >
@@ -203,7 +221,7 @@ export default function AdminStaffSignupPage() {
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => toggleModule(mod.id)}
-                            className="rounded text-amber-600 focus:ring-amber-500"
+                            className="rounded text-amber-600 focus:ring-amber-500 w-4 h-4"
                           />
                           <span>{mod.label}</span>
                         </label>
@@ -213,17 +231,17 @@ export default function AdminStaffSignupPage() {
                 </div>
 
                 <div className="pt-2">
-                  <Button type="submit" variant="primary" size="lg" className="w-full">
+                  <Button type="submit" variant="primary" size="lg" className="w-full py-3">
                     Submit Access Request for Approval <ArrowRight size={16} />
                   </Button>
                 </div>
               </form>
 
               <div className="mt-6 pt-4 border-t border-slate-100 text-center">
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600">
                   Already have an approved staff account?{' '}
                   <Link href="/admin/login" className="text-amber-600 font-bold hover:underline">
-                    Sign In here
+                    Sign In here →
                   </Link>
                 </p>
               </div>
