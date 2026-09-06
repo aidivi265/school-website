@@ -166,7 +166,7 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+      <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end">
         {/* Floating Trigger Button */}
         {!isOpen && (
           <div className="flex items-center gap-2">
@@ -199,19 +199,19 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
 
         {/* Chatbot Window */}
         {isOpen && (
-          <div className="w-[92vw] sm:w-[400px] h-[580px] max-h-[85vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200">
+          <div className="w-[92vw] sm:w-[380px] h-[500px] max-h-[75vh] sm:max-h-[78vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200">
             {/* Header */}
-            <div className="bg-navy-950 p-4 text-white flex items-center justify-between border-b border-navy-900 shrink-0">
+            <div className="bg-navy-950 px-4 py-3 text-white flex items-center justify-between border-b border-navy-900 shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold shadow-inner">
-                  <Bot size={20} />
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold shadow-inner">
+                  <Bot size={18} />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-serif font-bold text-sm leading-tight text-white">DPS Smart Assistant</span>
+                    <span className="font-serif font-bold text-xs sm:text-sm leading-tight text-white">DPS Smart Assistant</span>
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
-                  <p className="text-[10px] text-amber-300">Bilingual AI Helpdesk (EN / HI)</p>
+                  <p className="text-[10px] text-amber-300 font-medium">Bilingual Helpdesk (EN / HI)</p>
                 </div>
               </div>
 
@@ -233,16 +233,16 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
                       },
                     ]);
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-navy-900 border border-navy-800 text-[11px] font-bold text-amber-400 hover:bg-navy-800 transition-colors flex items-center gap-1"
+                  className="px-2 py-1 rounded-lg bg-navy-900 border border-navy-800 text-[10px] font-bold text-amber-400 hover:bg-navy-800 transition-colors flex items-center gap-1 cursor-pointer"
                   title="Switch Language"
                 >
-                  <Globe size={12} />
+                  <Globe size={11} />
                   {language === 'en' ? 'हिंदी' : 'English'}
                 </button>
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-navy-900 transition-colors"
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-navy-900 transition-colors cursor-pointer"
                   aria-label="Close Assistant"
                 >
                   <X size={18} />

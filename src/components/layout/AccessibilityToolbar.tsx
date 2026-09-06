@@ -155,10 +155,10 @@ export function AccessibilityToolbar({
 
           {/* Admin Link */}
           <Link
-            href="/admin"
-            className="text-[11px] font-bold text-amber-400 hover:text-white transition-colors"
+            href="/admin/login"
+            className="text-[11px] font-bold text-amber-400 hover:text-white transition-colors flex items-center gap-1"
           >
-            Admin Portal →
+            Admin Login 🔒 →
           </Link>
         </div>
       </div>
