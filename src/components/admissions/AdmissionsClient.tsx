@@ -4,12 +4,16 @@ import Link from 'next/link';
 import PageHeader from '@/components/layout/PageHeader';
 import { SectionHeader } from '@/components/ui';
 import EnquiryForm from '@/components/admissions/EnquiryForm';
-import { FileText, ArrowRight } from 'lucide-react';
+import { FeeCalculator } from '@/components/admissions/FeeCalculator';
+import { AdmissionTrackerModal } from '@/components/admissions/AdmissionTrackerModal';
+import { FileText, ArrowRight, Search, Sparkles, Calculator, HelpCircle } from 'lucide-react';
+import { useState } from 'react';
 import { School } from '@/types';
 import { usePagesCMS, useSiteSettings } from '@/lib/cms/useCMS';
 import { defaultPagesCMS } from '@/lib/cms/cmsStore';
 
 export default function AdmissionsClient({ initialSchool }: { initialSchool: School }) {
+  const [isTrackerOpen, setIsTrackerOpen] = useState(false);
   const { settings } = useSiteSettings(initialSchool);
   const { pagesData } = usePagesCMS();
   const data = pagesData || defaultPagesCMS;
@@ -64,6 +68,23 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
         subtitle={data.admissionsHeroSubtitle || "Begin your child's journey towards academic excellence and holistic personality development"}
         breadcrumbs={[{ label: 'Admissions' }]}
       />
+
+      {/* Quick Action Tools Bar */}
+      <section className="bg-amber-500/10 border-b border-amber-200/60 py-4 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs font-semibold text-amber-950">
+            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>Already submitted an admission application for 2025–26?</span>
+          </div>
+          <button
+            onClick={() => setIsTrackerOpen(true)}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs shadow transition-colors"
+          >
+            <Search className="w-3.5 h-3.5 text-amber-400" />
+            Track Application Status
+          </button>
+        </div>
+      </section>
 
       <section className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -162,8 +183,20 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
         </div>
       </section>
 
+      {/* Fee Calculator Section */}
+      <section className="py-12 px-4 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader
+            eyebrow="Financial Transparency"
+            title="Calculate Academic & Transport Fees"
+            subtitle="Transparent fee calculator tailored to your child's class and bus route"
+          />
+          <FeeCalculator />
+        </div>
+      </section>
+
       {/* 4 Steps Process */}
-      <section className="py-20 px-4 bg-slate-50 border-t border-slate-200">
+      <section className="py-20 px-4 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Step-by-Step"
@@ -175,7 +208,7 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
             {steps.map((s) => (
               <div
                 key={s.num}
-                className="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm relative overflow-hidden"
+                className="bg-slate-50 rounded-2xl p-7 border border-slate-200 shadow-sm relative overflow-hidden"
               >
                 <span className="font-serif font-bold text-5xl text-amber-500/20 block mb-2 leading-none">
                   {s.num}
@@ -187,6 +220,9 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
           </div>
         </div>
       </section>
+
+      {/* Admission Tracker Modal Popup */}
+      <AdmissionTrackerModal isOpen={isTrackerOpen} onClose={() => setIsTrackerOpen(false)} />
     </>
   );
 }

@@ -43,6 +43,7 @@ import HomeNoticesSection from '@/components/home/HomeNoticesSection';
 import HomeEventsSection from '@/components/home/HomeEventsSection';
 import HomeAchievementsSection from '@/components/home/HomeAchievementsSection';
 import HomeFacilitiesSection from '@/components/home/HomeFacilitiesSection';
+import { DayInTheLifeSection } from '@/components/home/DayInTheLifeSection';
 
 export default async function HomePage() {
   const school = await getSchoolData();
@@ -220,6 +221,9 @@ export default async function HomePage() {
 
       {/* ─── 10. ACHIEVEMENTS HIGHLIGHTS ──────────────────────────────────── */}
       <HomeAchievementsSection initialAchievements={achievements} />
+
+      {/* ─── 10B. INTERACTIVE DAY IN THE LIFE TIMELINE ────────────────────── */}
+      <DayInTheLifeSection />
 
       {/* ─── 11. PHOTO GALLERY PREVIEW WITH LIGHTBOX ──────────────────────── */}
       <section className="py-24 px-4 bg-white">

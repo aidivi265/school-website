@@ -10,6 +10,10 @@ import {
   DocumentItem,
   FAQItem,
   AdmissionEnquiry,
+  House,
+  JobOpening,
+  JobApplication,
+  AlumniProfile,
 } from '@/types';
 import {
   mockSchool,
@@ -23,6 +27,10 @@ import {
   mockDocuments,
   mockFAQs,
   mockStats,
+  mockHouses,
+  mockJobOpenings,
+  mockJobApplications,
+  mockAlumni,
 } from '../data/mockData';
 
 export const CMS_KEYS = {
@@ -36,6 +44,10 @@ export const CMS_KEYS = {
   DOCUMENTS: 'dps_cms_documents',
   FAQS: 'dps_cms_faqs',
   ENQUIRIES: 'dps_cms_enquiries',
+  HOUSES: 'dps_cms_houses',
+  CAREERS: 'dps_cms_careers',
+  APPLICATIONS: 'dps_cms_applications',
+  ALUMNI: 'dps_cms_alumni',
   PAGES: 'dps_cms_pages',
   SETTINGS: 'dps_cms_settings',
   STATS: 'dps_cms_stats',
@@ -555,6 +567,100 @@ class CMSStoreManager {
     this.setEnquiries(list);
   }
 
+  // ==================== HOUSE SYSTEM ====================
+  public getHouses(): House[] {
+    return this.get<House[]>(CMS_KEYS.HOUSES, mockHouses);
+  }
+
+  public setHouses(houses: House[]): void {
+    this.set(CMS_KEYS.HOUSES, houses);
+  }
+
+  public upsertHouse(house: House): void {
+    const list = this.getHouses();
+    const idx = list.findIndex((h) => h.id === house.id);
+    if (idx >= 0) {
+      list[idx] = house;
+    } else {
+      list.push(house);
+    }
+    this.setHouses([...list]);
+  }
+
+  // ==================== CAREERS & RECRUITMENT ====================
+  public getJobOpenings(): JobOpening[] {
+    return this.get<JobOpening[]>(CMS_KEYS.CAREERS, mockJobOpenings);
+  }
+
+  public setJobOpenings(jobs: JobOpening[]): void {
+    this.set(CMS_KEYS.CAREERS, jobs);
+  }
+
+  public upsertJobOpening(job: JobOpening): void {
+    const list = this.getJobOpenings();
+    const idx = list.findIndex((j) => j.id === job.id);
+    if (idx >= 0) {
+      list[idx] = job;
+    } else {
+      list.unshift(job);
+    }
+    this.setJobOpenings([...list]);
+  }
+
+  public deleteJobOpening(id: string): void {
+    const list = this.getJobOpenings().filter((j) => j.id !== id);
+    this.setJobOpenings(list);
+  }
+
+  public getJobApplications(): JobApplication[] {
+    return this.get<JobApplication[]>(CMS_KEYS.APPLICATIONS, mockJobApplications);
+  }
+
+  public setJobApplications(apps: JobApplication[]): void {
+    this.set(CMS_KEYS.APPLICATIONS, apps);
+  }
+
+  public addJobApplication(app: Omit<JobApplication, 'id' | 'created_at'>): JobApplication {
+    const newApp: JobApplication = {
+      ...app,
+      id: 'app-' + Date.now(),
+      created_at: new Date().toISOString(),
+    };
+    const list = [newApp, ...this.getJobApplications()];
+    this.setJobApplications(list);
+    return newApp;
+  }
+
+  public updateJobApplicationStatus(id: string, status: JobApplication['status']): void {
+    const list = this.getJobApplications().map((a) => (a.id === id ? { ...a, status } : a));
+    this.setJobApplications(list);
+  }
+
+  // ==================== ALUMNI SPOTLIGHT ====================
+  public getAlumni(): AlumniProfile[] {
+    return this.get<AlumniProfile[]>(CMS_KEYS.ALUMNI, mockAlumni);
+  }
+
+  public setAlumni(alumni: AlumniProfile[]): void {
+    this.set(CMS_KEYS.ALUMNI, alumni);
+  }
+
+  public upsertAlumni(alum: AlumniProfile): void {
+    const list = this.getAlumni();
+    const idx = list.findIndex((a) => a.id === alum.id);
+    if (idx >= 0) {
+      list[idx] = alum;
+    } else {
+      list.unshift(alum);
+    }
+    this.setAlumni([...list]);
+  }
+
+  public deleteAlumni(id: string): void {
+    const list = this.getAlumni().filter((a) => a.id !== id);
+    this.setAlumni(list);
+  }
+
   // ==================== PAGES CMS ====================
   public getPagesCMS(): typeof defaultPagesCMS {
     return this.get<typeof defaultPagesCMS>(CMS_KEYS.PAGES, defaultPagesCMS);
@@ -592,12 +698,17 @@ class CMSStoreManager {
     this.setNotices(mockNotices);
     this.setEvents(mockEvents);
     this.setFaculty(mockFaculty);
+    this.setFacilities(mockFacilities);
     this.setGallery(mockGalleryImages);
     this.setAlbums(mockGalleryAlbums);
     this.setAchievements(mockAchievements);
     this.setDocuments(mockDocuments);
     this.setFAQs(mockFAQs);
     this.setEnquiries(defaultEnquiries);
+    this.setHouses(mockHouses);
+    this.setJobOpenings(mockJobOpenings);
+    this.setJobApplications(mockJobApplications);
+    this.setAlumni(mockAlumni);
     this.set(CMS_KEYS.PAGES, defaultPagesCMS);
     this.set(CMS_KEYS.SETTINGS, defaultSettings);
     this.set(CMS_KEYS.STATS, mockStats);
@@ -605,3 +716,4 @@ class CMSStoreManager {
 }
 
 export const CMSStore = new CMSStoreManager();
+

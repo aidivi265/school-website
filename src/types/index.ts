@@ -226,3 +226,74 @@ export type UserProfile = {
   created_at?: string;
   updated_at?: string;
 };
+
+export type House = {
+  id: string;
+  name: string;
+  colorName: string;
+  colorHex: string;
+  bgLight: string;
+  borderHex: string;
+  badge_icon: string;
+  motto: string;
+  meaning: string;
+  house_master: string;
+  captain_boy: string;
+  captain_girl: string;
+  vice_captain: string;
+  points: {
+    academics: number;
+    sports: number;
+    cultural: number;
+    discipline: number;
+    total: number;
+  };
+  achievements: string[];
+  banner_image: string;
+};
+
+export type JobOpening = {
+  id: string;
+  title: string;
+  department: 'Senior Wing (PGT)' | 'Middle Wing (TGT)' | 'Primary Wing (PRT)' | 'Pre-Primary / NTT' | 'Sports & Fitness' | 'STEM & Robotics' | 'Administration & Lab';
+  employment_type: 'Full Time' | 'Part Time' | 'Contract';
+  experience_required: string;
+  qualifications: string;
+  openings_count: number;
+  salary_range?: string;
+  description: string;
+  requirements: string[];
+  is_active: boolean;
+  deadline: string;
+  created_at?: string;
+};
+
+export type JobApplication = {
+  id: string;
+  job_id: string;
+  job_title: string;
+  applicant_name: string;
+  email: string;
+  phone: string;
+  qualification: string;
+  experience_years: string;
+  current_organization?: string;
+  portfolio_url?: string;
+  resume_notes?: string;
+  status: 'Pending' | 'Shortlisted' | 'Interview Scheduled' | 'Rejected';
+  created_at: string;
+};
+
+export type AlumniProfile = {
+  id: string;
+  name: string;
+  batch: string;
+  current_role: string;
+  organization: string;
+  location: string;
+  achievement: string;
+  quote: string;
+  photo_url: string;
+  category: 'Civil Services / Govt' | 'Medicine & Healthcare' | 'Tech & Engineering' | 'Entrepreneurship / Business' | 'Arts & Academia';
+};
+

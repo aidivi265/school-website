@@ -18,6 +18,7 @@ import {
   ExternalLink,
   LogOut,
   GraduationCap,
+  Briefcase,
 } from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
@@ -28,6 +29,7 @@ const sidebarLinks = [
   { label: 'Events Calendar', href: '/admin/events', icon: Calendar },
   { label: 'Faculty Directory', href: '/admin/faculty', icon: Users },
   { label: 'Campus Facilities', href: '/admin/facilities', icon: GraduationCap },
+  { label: 'Careers & Hiring', href: '/admin/careers', icon: Briefcase },
   { label: 'Photo Gallery', href: '/admin/gallery', icon: ImageIcon },
   { label: 'Achievements', href: '/admin/achievements', icon: Trophy },
   { label: 'Documents & Circulars', href: '/admin/documents', icon: FileDown },

@@ -21,8 +21,18 @@ import {
   FAQItem,
   AdmissionEnquiry,
   School,
+  House,
+  JobOpening,
+  JobApplication,
+  AlumniProfile,
 } from '@/types';
-import { mockStats } from '../data/mockData';
+import {
+  mockStats,
+  mockHouses,
+  mockJobOpenings,
+  mockJobApplications,
+  mockAlumni,
+} from '../data/mockData';
 
 // Generic reactive hook for any CMS key
 export function useCMS<T>(key: CMSKey | string, fallback: T): [T, (data: T | ((prev: T) => T)) => void, boolean] {
@@ -290,3 +300,68 @@ export function useStats() {
 
   return { stats, setStats, isHydrated };
 }
+
+export function useHouses(initialHouses?: House[]) {
+  const [houses, setHouses, isHydrated] = useCMS<House[]>(
+    CMS_KEYS.HOUSES,
+    initialHouses && initialHouses.length > 0 ? initialHouses : CMSStore.getHouses()
+  );
+
+  const upsertHouse = useCallback((house: House) => {
+    CMSStore.upsertHouse(house);
+  }, []);
+
+  return { houses, setHouses, upsertHouse, isHydrated };
+}
+
+export function useCareers(initialJobs?: JobOpening[]) {
+  const [jobs, setJobs, isHydrated] = useCMS<JobOpening[]>(
+    CMS_KEYS.CAREERS,
+    initialJobs && initialJobs.length > 0 ? initialJobs : CMSStore.getJobOpenings()
+  );
+
+  const upsertJobOpening = useCallback((job: JobOpening) => {
+    CMSStore.upsertJobOpening(job);
+  }, []);
+
+  const deleteJobOpening = useCallback((id: string) => {
+    CMSStore.deleteJobOpening(id);
+  }, []);
+
+  return { jobs, setJobs, upsertJobOpening, deleteJobOpening, isHydrated };
+}
+
+export function useJobApplications(initialApps?: JobApplication[]) {
+  const [applications, setApplications, isHydrated] = useCMS<JobApplication[]>(
+    CMS_KEYS.APPLICATIONS,
+    initialApps && initialApps.length > 0 ? initialApps : CMSStore.getJobApplications()
+  );
+
+  const addJobApplication = useCallback((app: Omit<JobApplication, 'id' | 'created_at'>) => {
+    return CMSStore.addJobApplication(app);
+  }, []);
+
+  const updateJobApplicationStatus = useCallback((id: string, status: JobApplication['status']) => {
+    CMSStore.updateJobApplicationStatus(id, status);
+  }, []);
+
+  return { applications, setApplications, addJobApplication, updateJobApplicationStatus, isHydrated };
+}
+
+export function useAlumni(initialAlumni?: AlumniProfile[]) {
+  const [alumni, setAlumni, isHydrated] = useCMS<AlumniProfile[]>(
+    CMS_KEYS.ALUMNI,
+    initialAlumni && initialAlumni.length > 0 ? initialAlumni : CMSStore.getAlumni()
+  );
+
+  const upsertAlumni = useCallback((alum: AlumniProfile) => {
+    CMSStore.upsertAlumni(alum);
+  }, []);
+
+  const deleteAlumni = useCallback((id: string) => {
+    CMSStore.deleteAlumni(id);
+  }, []);
+
+  return { alumni, setAlumni, upsertAlumni, deleteAlumni, isHydrated };
+}
+

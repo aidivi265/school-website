@@ -199,7 +199,7 @@ export default function AcademicsClient() {
                 </div>
                 <div className="mt-8 pt-6 border-t border-navy-800">
                   <Link
-                    href="/admissions"
+                    href={`/admissions?stream=${encodeURIComponent(st.name)}#enquiry`}
                     className="inline-flex items-center gap-2 text-xs font-bold text-amber-400 hover:text-white transition-colors"
                   >
                     Enquire for Class XI Admission <ArrowRight size={14} />
@@ -207,6 +207,27 @@ export default function AcademicsClient() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Interactive Stream Selector Callout */}
+          <div className="mt-12 max-w-5xl mx-auto p-8 rounded-3xl bg-gradient-to-r from-amber-500/15 via-slate-50 to-amber-500/10 border border-amber-300 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="space-y-1 text-center sm:text-left">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full inline-block mb-1">
+                Interactive Career Tool
+              </span>
+              <h4 className="font-serif font-bold text-navy-950 text-xl">
+                Unsure which Class 11 stream fits your goals?
+              </h4>
+              <p className="text-xs text-slate-600 max-w-lg">
+                Answer 4 quick questions about your passions and target entrance exams to receive an instant personalized recommendation.
+              </p>
+            </div>
+            <Link
+              href="/stream-selector"
+              className="px-6 py-3.5 bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow transition-all shrink-0"
+            >
+              Take 2-Min Stream Quiz →
+            </Link>
           </div>
         </div>
       </section>
