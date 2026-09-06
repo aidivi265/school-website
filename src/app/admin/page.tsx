@@ -118,25 +118,27 @@ export default function AdminDashboardPage() {
       {/* Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         {[
-          { label: 'Active Notices', count: stats.noticesCount, icon: Bell, href: '/admin/notices', color: 'text-blue-600 bg-blue-50' },
-          { label: 'School Events', count: stats.eventsCount, icon: Calendar, href: '/admin/events', color: 'text-amber-600 bg-amber-50' },
-          { label: 'Faculty Staff', count: stats.facultyCount, icon: Users, href: '/admin/faculty', color: 'text-emerald-600 bg-emerald-50' },
-          { label: 'Enquiries', count: stats.enquiriesCount, icon: UserCheck, href: '/admin/admissions', color: 'text-purple-600 bg-purple-50' },
-          { label: 'Gallery Photos', count: stats.galleryCount, icon: ImageIcon, href: '/admin/gallery', color: 'text-indigo-600 bg-indigo-50' },
-          { label: 'Documents', count: stats.documentsCount, icon: FileDown, href: '/admin/documents', color: 'text-rose-600 bg-rose-50' },
+          { label: 'Enquiries Desk', count: stats.enquiriesCount, icon: UserCheck, href: '/admin/admissions', color: 'text-purple-600 bg-purple-50', priority: 'High' },
+          { label: 'Active Notices', count: stats.noticesCount, icon: Bell, href: '/admin/notices', color: 'text-blue-600 bg-blue-50', priority: 'Daily' },
+          { label: 'School Events', count: stats.eventsCount, icon: Calendar, href: '/admin/events', color: 'text-amber-600 bg-amber-50', priority: 'Active' },
+          { label: 'Faculty Staff', count: stats.facultyCount, icon: Users, href: '/admin/faculty', color: 'text-emerald-600 bg-emerald-50', priority: 'Team' },
+          { label: 'CBSE Documents', count: stats.documentsCount, icon: FileDown, href: '/admin/documents', color: 'text-rose-600 bg-rose-50', priority: 'Mandatory' },
+          { label: 'Gallery Photos', count: stats.galleryCount, icon: ImageIcon, href: '/admin/gallery', color: 'text-indigo-600 bg-indigo-50', priority: 'Media' },
         ].map((m) => {
           const Icon = m.icon;
           return (
             <Link
               key={m.label}
               href={m.href}
-              className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-300 transition-all flex flex-col justify-between group"
+              className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-300 transition-all flex flex-col justify-between group"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${m.color}`}>
                   <Icon size={18} />
                 </div>
-                <ArrowUpRight size={15} className="text-slate-400 group-hover:text-amber-600 transition-colors" />
+                <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                  {m.priority}
+                </span>
               </div>
               <div>
                 <p className="font-serif font-bold text-2xl text-slate-900 leading-none mb-1">{m.count}</p>
@@ -154,14 +156,17 @@ export default function AdminDashboardPage() {
           <div>
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h3 className="font-serif font-bold text-lg text-slate-900">Recent Admission Enquiries</h3>
-                <p className="text-xs text-slate-500">Live applications submitted via website form</p>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-purple-500" />
+                  <h3 className="font-serif font-bold text-lg text-slate-900">Admission Enquiries Desk</h3>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">Urgent parent leads submitted through public website</p>
               </div>
               <Link
                 href="/admin/admissions"
                 className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
               >
-                View All <ArrowUpRight size={14} />
+                Manage All <ArrowUpRight size={14} />
               </Link>
             </div>
 
@@ -207,9 +212,9 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Showing latest 4 enquiries</span>
+            <span>Showing latest {recentEnquiries.length} enquiries</span>
             <Link href="/admin/admissions" className="font-semibold text-slate-800 hover:text-amber-600">
-              Manage all enquiries →
+              Open Admissions CRM →
             </Link>
           </div>
         </div>
@@ -219,8 +224,11 @@ export default function AdminDashboardPage() {
           <div>
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h3 className="font-serif font-bold text-lg text-slate-900">Live Circulars & Notices</h3>
-                <p className="text-xs text-slate-500">Currently published to public website</p>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <h3 className="font-serif font-bold text-lg text-slate-900">Live Circulars & Ticker</h3>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">Streamed live to website homepage banner</p>
               </div>
               <Link
                 href="/admin/notices"
@@ -230,11 +238,11 @@ export default function AdminDashboardPage() {
               </Link>
             </div>
 
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               {notices.slice(0, 4).map((n) => (
                 <div
                   key={n.id}
-                  className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start justify-between gap-3"
+                  className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start justify-between gap-3 hover:border-slate-200 transition-colors"
                 >
                   <div className="flex-1">
                     <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider block mb-0.5">
@@ -257,7 +265,7 @@ export default function AdminDashboardPage() {
               href="/admin/notices"
               className="w-full inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs py-2.5 rounded-xl transition-colors"
             >
-              <Plus size={14} /> Create New Notice
+              <Plus size={14} /> Create & Publish New Notice
             </Link>
           </div>
         </div>

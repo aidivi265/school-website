@@ -39,20 +39,17 @@ export default function HomeHeroSection({ initialSchool }: { initialSchool: Scho
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full my-auto space-y-8">
         <div className="max-w-3xl space-y-5">
-          {/* Affiliation Pill */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-amber-400/40 shadow-md">
+          {/* Brand Badge Pill */}
+          <div className="inline-flex items-center gap-2 bg-amber-500/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-amber-400/40 shadow-md">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-amber-300 text-[11px] font-bold uppercase tracking-[0.16em]">
-              {settings.affiliation || 'CBSE'} Affiliated (No. {settings.affiliation_no || '2730248'}) · Sector 3, Rohini
+            <span className="text-amber-300 text-xs font-bold uppercase tracking-[0.18em]">
+              DECENT PUBLIC SCHOOL
             </span>
           </div>
 
           {/* Main Hero Headline */}
           <div className="space-y-2">
-            <p className="text-amber-400/90 text-xs sm:text-sm font-bold uppercase tracking-widest">
-              {settings.name?.toUpperCase() || 'DECENT PUBLIC SCHOOL, ROHINI'}
-            </p>
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.15]">
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.12]">
               <span className="text-gradient-gold block">
                 {heroHeadline}
               </span>
@@ -60,7 +57,7 @@ export default function HomeHeroSection({ initialSchool }: { initialSchool: Scho
           </div>
 
           {/* Tagline & Subtext */}
-          <p className="text-amber-200 text-sm sm:text-base font-light italic">
+          <p className="text-amber-200 text-sm sm:text-base font-medium italic">
             "{settings.tagline || 'Inspiring Minds. Building Futures. Shaping Leaders.'}"
           </p>
 

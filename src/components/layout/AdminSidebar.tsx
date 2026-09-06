@@ -28,31 +28,60 @@ import { SchoolCrest } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 import { getCurrentSessionUser, AdminUser } from '@/lib/cms/adminAuthStore';
 
-interface SidebarItem {
-  id: string;
-  label: string;
-  href: string;
-  icon: any;
-  superAdminOnly?: boolean;
+interface SidebarGroup {
+  groupTitle: string;
+  items: {
+    id: string;
+    label: string;
+    href: string;
+    icon: any;
+    superAdminOnly?: boolean;
+    badge?: string;
+  }[];
 }
 
-const allSidebarLinks: SidebarItem[] = [
-  { id: 'dashboard', label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { id: 'staff', label: 'Staff & Roles Governance', href: '/admin/staff', icon: ShieldCheck, superAdminOnly: true },
-  { id: 'analytics', label: 'Insights & Analytics', href: '/admin/analytics', icon: TrendingUp },
-  { id: 'admissions', label: 'Admission Enquiries', href: '/admin/admissions', icon: UserCheck },
-  { id: 'pages', label: 'Page Content CMS', href: '/admin/pages', icon: FileText },
-  { id: 'notices', label: 'Notices & News', href: '/admin/notices', icon: Bell },
-  { id: 'events', label: 'Events Calendar', href: '/admin/events', icon: Calendar },
-  { id: 'faculty', label: 'Faculty Directory', href: '/admin/faculty', icon: Users },
-  { id: 'facilities', label: 'Campus Facilities', href: '/admin/facilities', icon: GraduationCap },
-  { id: 'careers', label: 'Careers & Hiring', href: '/admin/careers', icon: Briefcase },
-  { id: 'gallery', label: 'Photo Gallery', href: '/admin/gallery', icon: ImageIcon },
-  { id: 'achievements', label: 'Achievements', href: '/admin/achievements', icon: Trophy },
-  { id: 'documents', label: 'Documents & Circulars', href: '/admin/documents', icon: FileDown },
-  { id: 'faqs', label: 'FAQs & Assistant', href: '/admin/faqs', icon: HelpCircle },
-  { id: 'settings', label: 'School Settings', href: '/admin/settings', icon: Settings },
-  { id: 'migration', label: 'Data Migration', href: '/admin/migration', icon: ArrowLeftRight },
+const sidebarGroups: SidebarGroup[] = [
+  {
+    groupTitle: 'Core & Governance',
+    items: [
+      { id: 'dashboard', label: 'Overview Dashboard', href: '/admin', icon: LayoutDashboard },
+      { id: 'staff', label: 'Staff & Roles Governance', href: '/admin/staff', icon: ShieldCheck, superAdminOnly: true, badge: 'Master' },
+    ],
+  },
+  {
+    groupTitle: 'Daily Operations & Leads',
+    items: [
+      { id: 'admissions', label: 'Admission Enquiries', href: '/admin/admissions', icon: UserCheck },
+      { id: 'notices', label: 'Notices & Circulars', href: '/admin/notices', icon: Bell },
+      { id: 'events', label: 'Events Calendar', href: '/admin/events', icon: Calendar },
+    ],
+  },
+  {
+    groupTitle: 'Academic & Campus',
+    items: [
+      { id: 'faculty', label: 'Faculty Directory', href: '/admin/faculty', icon: Users },
+      { id: 'facilities', label: 'Campus Facilities', href: '/admin/facilities', icon: GraduationCap },
+      { id: 'achievements', label: 'Toppers & Honors', href: '/admin/achievements', icon: Trophy },
+      { id: 'documents', label: 'CBSE Documents', href: '/admin/documents', icon: FileDown },
+    ],
+  },
+  {
+    groupTitle: 'Media & Digital Assets',
+    items: [
+      { id: 'gallery', label: 'Photo Gallery', href: '/admin/gallery', icon: ImageIcon },
+      { id: 'faqs', label: 'FAQs & AI Knowledge', href: '/admin/faqs', icon: HelpCircle },
+      { id: 'careers', label: 'Careers & Hiring', href: '/admin/careers', icon: Briefcase },
+      { id: 'pages', label: 'Page Content CMS', href: '/admin/pages', icon: FileText },
+    ],
+  },
+  {
+    groupTitle: 'System & Analytics',
+    items: [
+      { id: 'analytics', label: 'Insights & Analytics', href: '/admin/analytics', icon: TrendingUp },
+      { id: 'settings', label: 'School Settings', href: '/admin/settings', icon: Settings },
+      { id: 'migration', label: 'Data Migration', href: '/admin/migration', icon: ArrowLeftRight, superAdminOnly: true },
+    ],
+  },
 ];
 
 export default function AdminSidebar({
@@ -87,13 +116,6 @@ export default function AdminSidebar({
 
   const isSuperAdmin = !currentUser || currentUser.role === 'super_admin' || currentUser.allowedModules?.includes('all');
   const allowed = currentUser?.allowedModules || ['all'];
-
-  const visibleLinks = allSidebarLinks.filter((item) => {
-    if (item.id === 'dashboard') return true;
-    if (item.superAdminOnly && !isSuperAdmin) return false;
-    if (isSuperAdmin) return true;
-    return allowed.includes(item.id);
-  });
 
   return (
     <aside
@@ -133,29 +155,52 @@ export default function AdminSidebar({
         </div>
       )}
 
-      {/* Navigation Links */}
-      <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-        {visibleLinks.map(({ label, href, icon: Icon, superAdminOnly }) => {
-          const isActive = pathname === href;
+      {/* Navigation Groups */}
+      <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+        {sidebarGroups.map((group) => {
+          const visibleGroupItems = group.items.filter((item) => {
+            if (item.id === 'dashboard') return true;
+            if (item.superAdminOnly && !isSuperAdmin) return false;
+            if (isSuperAdmin) return true;
+            return allowed.includes(item.id);
+          });
+
+          if (visibleGroupItems.length === 0) return null;
+
           return (
-            <Link
-              key={href}
-              href={href}
-              onClick={onClose}
-              className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                isActive
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Icon size={16} className={isActive ? 'text-slate-950' : 'text-slate-400'} />
-                <span>{label}</span>
-              </div>
-              {superAdminOnly && !isActive && (
-                <Lock size={12} className="text-amber-400 opacity-60" />
-              )}
-            </Link>
+            <div key={group.groupTitle} className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">
+                {group.groupTitle}
+              </p>
+              {visibleGroupItems.map(({ label, href, icon: Icon, superAdminOnly, badge }) => {
+                const isActive = pathname === href;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={onClose}
+                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                      isActive
+                        ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Icon size={15} className={isActive ? 'text-slate-950' : 'text-slate-400'} />
+                      <span>{label}</span>
+                    </div>
+                    {badge && !isActive && (
+                      <span className="text-[9px] bg-amber-400/10 text-amber-400 px-1.5 py-0.2 rounded border border-amber-400/20 font-bold">
+                        {badge}
+                      </span>
+                    )}
+                    {superAdminOnly && !badge && !isActive && (
+                      <Lock size={12} className="text-amber-400 opacity-60" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           );
         })}
       </nav>
