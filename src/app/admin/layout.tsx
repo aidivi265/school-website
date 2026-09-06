@@ -3,18 +3,19 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/layout/AdminSidebar';
-import { Menu, ExternalLink, ShieldAlert, Loader2 } from 'lucide-react';
+import { Menu, ExternalLink, ShieldAlert, Loader2, Lock, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { getCurrentSessionUser, AdminUser } from '@/lib/cms/adminAuthStore';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
-  // If on /admin/login, don't show the dashboard shell
-  const isLoginPage = pathname === '/admin/login';
+  const isLoginPage = pathname === '/admin/login' || pathname === '/admin/signup';
 
   useEffect(() => {
     if (isLoginPage) {
@@ -27,14 +28,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (sessionStr) {
         const parsed = JSON.parse(sessionStr);
         if (parsed && (parsed.email || parsed.role)) {
+          setCurrentUser(parsed);
           setIsAuthenticated(true);
           setIsCheckingAuth(false);
           return;
         }
       }
-    } catch {
-      // ignore parse error
-    }
+    } catch {}
 
     // Not authenticated -> redirect to login
     setIsAuthenticated(false);
@@ -53,7 +53,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Loader2 className="w-8 h-8 animate-spin" />
         </div>
         <p className="font-serif font-bold text-lg text-white">Verifying Admin Permissions...</p>
-        <p className="text-xs text-slate-400 mt-1">Redirecting to administrator login portal</p>
+        <p className="text-xs text-slate-400 mt-1">Checking session credentials with school security gate</p>
+      </div>
+    );
+  }
+
+  const isSuperAdmin = !currentUser || currentUser.role === 'super_admin' || currentUser.allowedModules?.includes('all');
+
+  // Route Permission Restriction for Super Admin only paths
+  const isRestrictedPath = pathname === '/admin/staff';
+  if (isRestrictedPath && !isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex">
+        <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
+          <main className="flex-1 p-6 sm:p-12 flex items-center justify-center">
+            <div className="bg-white rounded-3xl p-8 border border-rose-200 shadow-xl max-w-md text-center space-y-4">
+              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto">
+                <Lock size={28} />
+              </div>
+              <h2 className="font-serif font-bold text-xl text-slate-900">Access Restricted</h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                The Staff Governance module is strictly reserved for <strong>Principal Dr. Ananya Sharma / Super Admin</strong>.
+              </p>
+              <Link
+                href="/admin"
+                className="inline-block px-5 py-2.5 bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs rounded-xl shadow transition-colors"
+              >
+                ← Return to Staff Dashboard
+              </Link>
+            </div>
+          </main>
+        </div>
       </div>
     );
   }
@@ -78,7 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
               aria-label="Open sidebar"
             >
               <Menu size={22} />
@@ -102,14 +133,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <ExternalLink size={13} /> View Live Website
             </Link>
 
-            <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
-              <div className="w-8 h-8 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center text-xs shadow-sm">
-                A
+            {/* Current Logged in Staff Badge */}
+            <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200">
+              <div className="w-8 h-8 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center text-xs shadow-sm uppercase">
+                {currentUser?.name ? currentUser.name.charAt(0) : 'A'}
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-xs font-bold text-slate-900 leading-tight">Administrator</p>
-                <p className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Authorized
+                <p className="text-xs font-bold text-slate-900 leading-tight">
+                  {currentUser?.name || 'Administrator'}
+                </p>
+                <p className="text-[10px] text-slate-500 font-medium">
+                  {isSuperAdmin ? '👑 Principal / Super Admin' : currentUser?.designation || 'Staff Member'}
                 </p>
               </div>
             </div>
