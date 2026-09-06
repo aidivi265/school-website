@@ -24,11 +24,14 @@ import {
   Bell,
   Briefcase,
   HelpCircle,
+  Calendar,
+  Award,
 } from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { School } from '@/types';
 import { useSiteSettings } from '@/lib/cms/useCMS';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AccessibilityToolbar } from '@/components/layout/AccessibilityToolbar';
 
 interface DropdownItem {
   label: string;
@@ -61,6 +64,13 @@ const navCategories: NavCategory[] = [
         href: '/about#leadership',
         description: 'Inspiring message from Principal Dr. Ananya Sharma.',
         icon: Users,
+      },
+      {
+        label: 'Alumni Network & Hall of Fame',
+        href: '/alumni',
+        description: 'Inspiring alumni across IITs, AIIMS, and global leaders.',
+        icon: Award,
+        badge: 'Spotlight',
       },
       {
         label: '360° Virtual Campus Tour',
@@ -125,6 +135,13 @@ const navCategories: NavCategory[] = [
         icon: BookOpen,
       },
       {
+        label: 'Book Campus Visit & Meeting',
+        href: '/book-visit',
+        description: 'Schedule a personalized tour or Principal desk meeting.',
+        icon: Calendar,
+        badge: 'Book Slot',
+      },
+      {
         label: 'Smart Fee & Bus Calculator',
         href: '/admissions#fee-calculator',
         description: 'Transparent quarterly fee & Rohini bus slab estimator.',
@@ -154,6 +171,13 @@ const navCategories: NavCategory[] = [
         href: '/facilities',
         description: 'STEM Tinkering Labs, skating rink, sports arena, and smart class.',
         icon: Building,
+      },
+      {
+        label: 'Digital School Magazine',
+        href: '/magazine',
+        description: 'Interactive flipbook reader with student poetry and articles.',
+        icon: BookOpen,
+        badge: 'Flipbook',
       },
       {
         label: 'Student Wall of Fame',
@@ -221,6 +245,9 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
             : 'bg-white shadow-sm'
         }`}
       >
+        {/* Global Accessibility Toolbar */}
+        <AccessibilityToolbar />
+
         {/* Top Info Strip */}
         <div className="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950 text-white text-xs hidden lg:block border-b border-amber-500/25">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-1.5 flex items-center justify-between">

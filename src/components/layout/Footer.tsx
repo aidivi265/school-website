@@ -43,6 +43,7 @@ function IconYoutube() {
 const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'About Our School', href: '/about' },
+  { label: 'Alumni Hall of Fame', href: '/alumni' },
   { label: '360° Virtual Tour', href: '/virtual-tour' },
   { label: 'House System & Points', href: '/house-system' },
   { label: 'Academics & Pedagogy', href: '/academics' },
@@ -50,9 +51,11 @@ const quickLinks = [
   { label: 'Faculty Directory', href: '/faculty' },
   { label: 'Campus Facilities', href: '/facilities' },
   { label: 'Admission Guidelines', href: '/admissions' },
+  { label: 'Book Campus Visit / PTM', href: '/book-visit' },
 ];
 
 const moreLinks = [
+  { label: 'Digital Magazine ("Decent Horizon")', href: '/magazine' },
   { label: 'News & Notices', href: '/notices' },
   { label: 'Events Calendar', href: '/events' },
   { label: 'Photo Gallery', href: '/gallery' },

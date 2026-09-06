@@ -15,6 +15,7 @@ import {
   Download,
   Trash2,
   X,
+  MessageCircle,
 } from 'lucide-react';
 
 export default function AdminAdmissionsPage() {
@@ -317,22 +318,56 @@ export default function AdminAdmissionsPage() {
                 </div>
               </div>
 
-              {/* Contact Actions */}
-              <div className="flex items-center gap-3">
-                <a
-                  href={`tel:${selectedEnquiry.phone}`}
-                  className="flex-1 py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center gap-2 border border-emerald-200 transition-colors"
-                >
-                  <Phone size={14} /> Call: {selectedEnquiry.phone}
-                </a>
-                {selectedEnquiry.email && (
+              {/* Contact Actions with WhatsApp Dispatcher */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
                   <a
-                    href={`mailto:${selectedEnquiry.email}`}
-                    className="flex-1 py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-xs flex items-center justify-center gap-2 border border-blue-200 transition-colors"
+                    href={`tel:${selectedEnquiry.phone}`}
+                    className="flex-1 py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center gap-2 border border-emerald-200 transition-colors"
                   >
-                    <Mail size={14} /> Send Email
+                    <Phone size={14} /> Call: {selectedEnquiry.phone}
                   </a>
-                )}
+                  {selectedEnquiry.email && (
+                    <a
+                      href={`mailto:${selectedEnquiry.email}`}
+                      className="flex-1 py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-xs flex items-center justify-center gap-2 border border-blue-200 transition-colors"
+                    >
+                      <Mail size={14} /> Email Parent
+                    </a>
+                  )}
+                </div>
+
+                {/* 1-Click WhatsApp Quick Templates */}
+                <div className="p-3.5 bg-emerald-500/10 rounded-2xl border border-emerald-300 space-y-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-950 flex items-center gap-1.5">
+                    <MessageCircle size={13} className="text-emerald-700" /> Instant WhatsApp Notification Dispatch:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cleanPhone = selectedEnquiry.phone.replace(/[^0-9]/g, '');
+                        const msg = `Dear ${selectedEnquiry.parent_name},\n\nGreetings from Decent Public School, Rohini!\n\nRegarding your admission enquiry (Ref: ${selectedEnquiry.id}) for *${selectedEnquiry.student_name}* for *${selectedEnquiry.class_applying}*, we would like to invite you for a campus interaction session.\n\nPlease visit our admission desk at Sector 3, Rohini between 8:30 AM and 3:30 PM.\n\nHelpline: 011-27948281 / +91 98188 99001\nWebsite: https://www.decentpublicschoolrohini.edu.in`;
+                        window.open(`https://wa.me/91${cleanPhone.slice(-10)}?text=${encodeURIComponent(msg)}`, '_blank');
+                      }}
+                      className="py-1.5 px-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow transition-colors"
+                    >
+                      <MessageCircle size={12} /> Send Interaction Invite
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cleanPhone = selectedEnquiry.phone.replace(/[^0-9]/g, '');
+                        const msg = `Dear ${selectedEnquiry.parent_name},\n\nCongratulations! We are delighted to extend a Provisional Admission Offer for *${selectedEnquiry.student_name}* in *${selectedEnquiry.class_applying}* at Decent Public School, Sector 3, Rohini.\n\nPlease complete enrolment and fee deposit formalities within 5 working days.\n\nTrack status: https://www.decentpublicschoolrohini.edu.in/admissions#track`;
+                        window.open(`https://wa.me/91${cleanPhone.slice(-10)}?text=${encodeURIComponent(msg)}`, '_blank');
+                      }}
+                      className="py-1.5 px-2.5 rounded-xl bg-navy-950 hover:bg-navy-900 text-amber-400 font-bold text-[11px] flex items-center justify-center gap-1.5 shadow transition-colors"
+                    >
+                      <MessageCircle size={12} /> Send Offer Letter
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {selectedEnquiry.address && (

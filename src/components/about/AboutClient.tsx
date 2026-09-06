@@ -2,6 +2,7 @@
 
 import PageHeader from '@/components/layout/PageHeader';
 import { SectionHeader } from '@/components/ui';
+import { SchoolAnthemPlayer } from '@/components/anthem/SchoolAnthemPlayer';
 import { Target, Compass, Heart, Shield, CheckCircle } from 'lucide-react';
 import { School } from '@/types';
 import { usePagesCMS, useSiteSettings } from '@/lib/cms/useCMS';
@@ -186,6 +187,18 @@ export default function AboutClient({ initialSchool }: { initialSchool: School }
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Official School Anthem Player */}
+      <section className="py-16 px-4 bg-slate-900 border-t border-slate-800">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeader
+            eyebrow="Pride & Heritage"
+            title="School Anthem & Morning Prayer"
+            subtitle="Sing along with the cherished anthem that resonates in every DPS Rohini student's heart"
+          />
+          <SchoolAnthemPlayer />
         </div>
       </section>
 

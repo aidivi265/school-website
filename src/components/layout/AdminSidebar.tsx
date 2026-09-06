@@ -19,12 +19,16 @@ import {
   LogOut,
   GraduationCap,
   Briefcase,
+  TrendingUp,
 } from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 
 const sidebarLinks = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { label: 'Insights & Analytics', href: '/admin/analytics', icon: TrendingUp },
+  { label: 'Admission Enquiries', href: '/admin/admissions', icon: UserCheck },
+  { label: 'Page Content CMS', href: '/admin/pages', icon: FileText },
   { label: 'Notices & News', href: '/admin/notices', icon: Bell },
   { label: 'Events Calendar', href: '/admin/events', icon: Calendar },
   { label: 'Faculty Directory', href: '/admin/faculty', icon: Users },
@@ -33,9 +37,7 @@ const sidebarLinks = [
   { label: 'Photo Gallery', href: '/admin/gallery', icon: ImageIcon },
   { label: 'Achievements', href: '/admin/achievements', icon: Trophy },
   { label: 'Documents & Circulars', href: '/admin/documents', icon: FileDown },
-  { label: 'Admission Enquiries', href: '/admin/admissions', icon: UserCheck },
   { label: 'FAQs & Assistant', href: '/admin/faqs', icon: HelpCircle },
-  { label: 'Page Content CMS', href: '/admin/pages', icon: FileText },
   { label: 'School Settings', href: '/admin/settings', icon: Settings },
   { label: 'Data Migration', href: '/admin/migration', icon: ArrowLeftRight },
 ];
