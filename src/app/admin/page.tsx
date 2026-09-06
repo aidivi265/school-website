@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Bell,
@@ -11,6 +11,9 @@ import {
   UserCheck,
   ArrowUpRight,
   Plus,
+  ShieldCheck,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
 import {
   useNotices,
@@ -20,6 +23,7 @@ import {
   useDocuments,
   useEnquiries,
 } from '@/lib/cms/useCMS';
+import { getCurrentSessionUser, getStoredAdminUsers, AdminUser } from '@/lib/cms/adminAuthStore';
 import { formatDate } from '@/lib/utils';
 
 export default function AdminDashboardPage() {
@@ -29,6 +33,20 @@ export default function AdminDashboardPage() {
   const { images } = useGallery();
   const { documents } = useDocuments();
   const { enquiries } = useEnquiries();
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
+  const [pendingStaffCount, setPendingStaffCount] = useState(0);
+
+  useEffect(() => {
+    const user = getCurrentSessionUser();
+    setCurrentUser(user);
+
+    const allUsers = getStoredAdminUsers();
+    const pending = allUsers.filter((u) => u.status === 'pending');
+    setPendingStaffCount(pending.length);
+  }, []);
+
+  const isSuperAdmin = !currentUser || currentUser.role === 'super_admin' || currentUser.allowedModules?.includes('all');
+  const allowed = currentUser?.allowedModules || ['all'];
 
   const stats = {
     noticesCount: notices.length,
@@ -46,28 +64,54 @@ export default function AdminDashboardPage() {
       {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-navy-950 via-navy-900 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-amber-400 block mb-1">
-            Decent Public School CMS
-          </span>
-          <h2 className="font-serif font-bold text-2xl sm:text-3xl">Administrator Dashboard</h2>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
+              Decent Public School CMS
+            </span>
+            <span className="text-[10px] bg-white/10 text-slate-300 font-semibold px-2 py-0.5 rounded-full border border-white/15">
+              {isSuperAdmin ? '👑 Super Admin / Principal' : `Staff: ${currentUser?.designation || 'Faculty'}`}
+            </span>
+          </div>
+          <h2 className="font-serif font-bold text-2xl sm:text-3xl">
+            {currentUser?.name ? `Welcome back, ${currentUser.name}` : 'Administrator Dashboard'}
+          </h2>
           <p className="text-slate-300 text-xs sm:text-sm mt-1">
-            Manage school notices, events, faculty directory, photo gallery, circulars, and admission enquiries.
+            {isSuperAdmin
+              ? 'Complete authority over school notices, admissions, staff governance, events, and CBSE regulatory disclosures.'
+              : `Your staff account is authorized to manage: ${(currentUser?.allowedModules || ['notices']).join(', ')}.`}
           </p>
         </div>
 
         <div className="flex flex-wrap gap-2.5">
-          <Link
-            href="/admin/notices"
-            className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow transition-colors"
-          >
-            <Plus size={15} /> Add Notice
-          </Link>
-          <Link
-            href="/admin/events"
-            className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-colors border border-white/20"
-          >
-            <Plus size={15} /> Add Event
-          </Link>
+          {isSuperAdmin && (
+            <Link
+              href="/admin/staff"
+              className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow transition-colors"
+            >
+              <ShieldCheck size={15} /> Staff Access Hub
+              {pendingStaffCount > 0 && (
+                <span className="bg-slate-950 text-amber-400 text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ml-1">
+                  {pendingStaffCount}
+                </span>
+              )}
+            </Link>
+          )}
+          {(isSuperAdmin || allowed.includes('notices')) && (
+            <Link
+              href="/admin/notices"
+              className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-colors border border-white/20"
+            >
+              <Plus size={15} /> Add Notice
+            </Link>
+          )}
+          {(isSuperAdmin || allowed.includes('events')) && (
+            <Link
+              href="/admin/events"
+              className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-colors border border-white/20"
+            >
+              <Plus size={15} /> Add Event
+            </Link>
+          )}
         </div>
       </div>
 

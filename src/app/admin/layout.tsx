@@ -60,28 +60,83 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const isSuperAdmin = !currentUser || currentUser.role === 'super_admin' || currentUser.allowedModules?.includes('all');
 
-  // Route Permission Restriction for Super Admin only paths
-  const isRestrictedPath = pathname === '/admin/staff';
-  if (isRestrictedPath && !isSuperAdmin) {
+  const pathToModuleMap: Record<string, { moduleId: string; name: string; superAdminOnly?: boolean }> = {
+    '/admin/staff': { moduleId: 'staff', name: 'Staff & Roles Governance', superAdminOnly: true },
+    '/admin/analytics': { moduleId: 'analytics', name: 'Insights & Analytics' },
+    '/admin/admissions': { moduleId: 'admissions', name: 'Admission Enquiries' },
+    '/admin/pages': { moduleId: 'pages', name: 'Page Content CMS' },
+    '/admin/notices': { moduleId: 'notices', name: 'Notices & News' },
+    '/admin/events': { moduleId: 'events', name: 'Events Calendar' },
+    '/admin/faculty': { moduleId: 'faculty', name: 'Faculty Directory' },
+    '/admin/facilities': { moduleId: 'facilities', name: 'Campus Facilities' },
+    '/admin/careers': { moduleId: 'careers', name: 'Careers & Hiring' },
+    '/admin/gallery': { moduleId: 'gallery', name: 'Photo Gallery' },
+    '/admin/achievements': { moduleId: 'achievements', name: 'Achievements' },
+    '/admin/documents': { moduleId: 'documents', name: 'Documents & Circulars' },
+    '/admin/faqs': { moduleId: 'faqs', name: 'FAQs & Assistant' },
+    '/admin/settings': { moduleId: 'settings', name: 'School Settings' },
+    '/admin/migration': { moduleId: 'migration', name: 'Data Migration', superAdminOnly: true },
+  };
+
+  const currentModuleInfo = pathToModuleMap[pathname];
+  const isAuthorized =
+    !currentModuleInfo ||
+    isSuperAdmin ||
+    (!currentModuleInfo.superAdminOnly && currentUser?.allowedModules?.includes(currentModuleInfo.moduleId));
+
+  // Route Permission Restriction Screen
+  if (!isAuthorized) {
+    const userAllowed = currentUser?.allowedModules || [];
     return (
       <div className="min-h-screen bg-slate-100 flex">
         <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
           <main className="flex-1 p-6 sm:p-12 flex items-center justify-center">
-            <div className="bg-white rounded-3xl p-8 border border-rose-200 shadow-xl max-w-md text-center space-y-4">
-              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto">
-                <Lock size={28} />
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-xl max-w-lg text-center space-y-5">
+              <div className="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-200">
+                <Lock size={32} />
               </div>
-              <h2 className="font-serif font-bold text-xl text-slate-900">Access Restricted</h2>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                The Staff Governance module is strictly reserved for <strong>Principal Dr. Ananya Sharma / Super Admin</strong>.
-              </p>
-              <Link
-                href="/admin"
-                className="inline-block px-5 py-2.5 bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs rounded-xl shadow transition-colors"
-              >
-                ← Return to Staff Dashboard
-              </Link>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-100 px-2.5 py-1 rounded-full">
+                  Permission Required
+                </span>
+                <h2 className="font-serif font-bold text-2xl text-slate-900 mt-2">
+                  Access Restricted to {currentModuleInfo.name}
+                </h2>
+                <p className="text-xs text-slate-600 leading-relaxed mt-2">
+                  {currentModuleInfo.superAdminOnly
+                    ? 'This section is strictly reserved for the Principal / Super Administrator.'
+                    : `Your staff account (${currentUser?.email}) has not been granted permission to access the "${currentModuleInfo.name}" module.`}
+                </p>
+              </div>
+
+              {userAllowed.length > 0 && !userAllowed.includes('all') && (
+                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left">
+                  <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    Your Authorized Modules:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {userAllowed.map((mod) => (
+                      <Link
+                        key={mod}
+                        href={`/admin/${mod}`}
+                        className="text-xs font-semibold bg-white border border-slate-300 text-slate-800 hover:border-amber-500 hover:text-amber-700 px-2.5 py-1 rounded-lg shadow-sm transition-colors capitalize"
+                      >
+                        → {mod}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/admin"
+                  className="w-full sm:w-auto px-5 py-2.5 bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs rounded-xl shadow transition-colors"
+                >
+                  ← Return to Staff Dashboard
+                </Link>
+              </div>
             </div>
           </main>
         </div>
