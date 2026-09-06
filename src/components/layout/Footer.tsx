@@ -248,8 +248,8 @@ export default function Footer({ school: initialSchool }: { school: School }) {
               Terms & Disclaimer
             </Link>
             <span className="w-1 h-1 rounded-full bg-slate-600" />
-            <Link href="/admin" className="text-amber-400/80 hover:text-amber-300 font-semibold transition-colors">
-              Admin Portal
+            <Link href="/admin/login" className="text-amber-400/80 hover:text-amber-300 font-semibold transition-colors">
+              Staff & Admin Portal
             </Link>
           </div>
         </div>

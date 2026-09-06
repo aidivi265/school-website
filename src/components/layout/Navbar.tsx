@@ -461,11 +461,11 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
             Apply for Admission 2025–26
           </Link>
           <Link
-            href="/admin"
+            href="/admin/login"
             onClick={() => setIsOpen(false)}
             className="w-full bg-navy-950 text-white font-bold text-xs py-2.5 rounded-xl text-center block"
           >
-            Admin CMS Portal Login →
+            Admin & Staff Portal Login →
           </Link>
         </div>
       </div>

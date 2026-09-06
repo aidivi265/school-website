@@ -13,7 +13,9 @@ import {
   Loader2,
   UserPlus,
   Clock,
-  ShieldAlert,
+  Eye,
+  EyeOff,
+  Building2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { getStoredAdminUsers } from '@/lib/cms/adminAuthStore';
@@ -21,6 +23,7 @@ import { getStoredAdminUsers } from '@/lib/cms/adminAuthStore';
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingUserNotice, setPendingUserNotice] = useState<string | null>(null);
@@ -33,6 +36,7 @@ export default function AdminLoginPage() {
     setPendingUserNotice(null);
 
     const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
 
     try {
       // 1. Check local admin store accounts
@@ -43,30 +47,30 @@ export default function AdminLoginPage() {
         // Status Check
         if (matchedUser.status === 'pending') {
           setPendingUserNotice(
-            `Account Pending Principal Approval: Your request for "${matchedUser.name}" (${matchedUser.designation}) is awaiting approval from Principal Dr. Ananya Sharma.`
+            `Account Pending Principal Approval: Your registration request for "${matchedUser.name}" (${matchedUser.designation}) has been submitted and is awaiting approval by Principal Dr. Ananya Sharma. You will be able to log in once approved.`
           );
           setLoading(false);
           return;
         }
 
         if (matchedUser.status === 'suspended') {
-          setError('This staff account has been temporarily suspended by the Principal.');
+          setError('This staff account has been temporarily suspended by the Principal. Please contact the administrative office.');
           setLoading(false);
           return;
         }
 
         if (matchedUser.status === 'rejected') {
-          setError('Your staff registration request was declined by the administrator.');
+          setError('Your staff registration request was not approved. Please contact the school administration.');
           setLoading(false);
           return;
         }
 
         // Active account password verification
         const validPassword =
-          password === 'DecentSchool@2025' ||
-          password === 'Admin@DPS2025' ||
-          password === 'admin123' ||
-          password.length >= 6;
+          (matchedUser.password && cleanPassword === matchedUser.password) ||
+          cleanPassword === 'Admin@2025' ||
+          cleanPassword === 'Teacher@2025' ||
+          cleanPassword === 'DecentSchool@2025';
 
         if (validPassword) {
           localStorage.setItem(
@@ -85,7 +89,7 @@ export default function AdminLoginPage() {
           router.push('/admin');
           return;
         } else {
-          setError('Incorrect password. Please enter the authorized administrator password.');
+          setError('Incorrect password. Please enter the correct password for your account.');
           setLoading(false);
           return;
         }
@@ -96,7 +100,7 @@ export default function AdminLoginPage() {
       if (supabase) {
         const { data, error: authError } = await supabase.auth.signInWithPassword({
           email: cleanEmail,
-          password,
+          password: cleanPassword,
         });
 
         if (!authError && data.session) {
@@ -115,12 +119,15 @@ export default function AdminLoginPage() {
       }
 
       // 3. Fallback master password check
-      if (password === 'DecentSchool@2025' || password === 'Admin@DPS2025') {
+      if (
+        (cleanEmail === 'principal@decentpublicschoolrohini.edu.in' || cleanEmail === 'admin@decentpublicschoolrohini.edu.in') &&
+        (cleanPassword === 'Admin@2025' || cleanPassword === 'DecentSchool@2025')
+      ) {
         localStorage.setItem(
           'dps_admin_session',
           JSON.stringify({
-            name: 'Principal / Admin',
-            email: cleanEmail || 'admin@decentpublicschoolrohini.edu.in',
+            name: 'Principal Dr. Ananya Sharma',
+            email: cleanEmail,
             role: 'super_admin',
             allowedModules: ['all'],
             isProtected: true,
@@ -129,51 +136,41 @@ export default function AdminLoginPage() {
         );
         router.push('/admin');
       } else {
-        setError('No account found matching these credentials. If you are a teacher, please submit a registration request below.');
+        setError('No staff or administrator account found matching these credentials. If you are a new teacher, please request access below.');
       }
     } catch {
-      setError('An error occurred during authentication. Please check your credentials.');
+      setError('An error occurred during authentication. Please check your network connection.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickDemoLogin = (type: 'principal' | 'teacher') => {
-    if (type === 'principal') {
-      setEmail('principal@decentpublicschoolrohini.edu.in');
-      setPassword('DecentSchool@2025');
-    } else {
-      setEmail('rahul.sharma@decentpublicschoolrohini.edu.in');
-      setPassword('DecentSchool@2025');
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-navy-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-navy-950 flex items-center justify-center p-4 sm:p-6">
       <div className="max-w-md w-full">
         {/* Brand Crest & Title */}
         <div className="text-center mb-8">
-          <div className="inline-block mb-3">
+          <div className="inline-block mb-3 p-3 rounded-2xl bg-white/5 border border-white/10 shadow-lg">
             <SchoolCrest size={54} />
           </div>
           <h1 className="font-serif font-bold text-2xl sm:text-3xl text-white">
             Decent Public School
           </h1>
           <p className="text-xs text-amber-400 font-semibold uppercase tracking-widest mt-1">
-            Staff & Administration Portal
+            School Administration & Staff Portal
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-3xl p-8 shadow-2xl border border-slate-200">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={20} className="text-amber-600" />
-              <h2 className="font-serif font-bold text-xl text-slate-900">Sign In to CMS</h2>
+        <div className="bg-white rounded-3xl p-7 sm:p-9 shadow-2xl border border-slate-200">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+            <div>
+              <h2 className="font-serif font-bold text-xl text-slate-900">Portal Sign In</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Enter your school credentials</p>
             </div>
-            <span className="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded-full border border-slate-200">
-              Role-Based Access
-            </span>
+            <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+              <ShieldCheck size={20} />
+            </div>
           </div>
 
           {/* Pending Approval Notice */}
@@ -181,7 +178,7 @@ export default function AdminLoginPage() {
             <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-xs space-y-1.5 mb-5 animate-in fade-in duration-200">
               <div className="font-bold flex items-center gap-1.5 text-amber-900">
                 <Clock size={16} className="text-amber-700" />
-                <span>Approval In Progress</span>
+                <span>Approval Under Review</span>
               </div>
               <p className="leading-relaxed">{pendingUserNotice}</p>
             </div>
@@ -207,25 +204,35 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@decentpublicschoolrohini.edu.in"
-                  className="w-full text-sm pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 font-medium"
+                  className="w-full text-sm pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 font-medium transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Password
+                </label>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full text-sm pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 font-medium"
+                  className="w-full text-sm pl-10 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 font-medium transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 
@@ -238,7 +245,7 @@ export default function AdminLoginPage() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="animate-spin" size={18} /> Authenticating...
+                  <Loader2 className="animate-spin" size={18} /> Verifying Credentials...
                 </>
               ) : (
                 <>
@@ -249,32 +256,19 @@ export default function AdminLoginPage() {
           </form>
 
           {/* Teacher Request Account Button */}
-          <div className="mt-5 pt-4 border-t border-slate-100 flex flex-col gap-2.5 text-center">
+          <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-3">
+            <div className="text-center">
+              <p className="text-xs text-slate-500">
+                Are you a school educator, coordinator or faculty member?
+              </p>
+            </div>
             <Link
               href="/admin/signup"
-              className="w-full py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs border border-amber-200 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-navy-950 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-2"
             >
-              <UserPlus size={14} className="text-amber-700" />
-              Teachers & Staff: Request New Access Account →
+              <UserPlus size={15} className="text-amber-400" />
+              <span>New Teacher? Register & Request Access</span>
             </Link>
-
-            {/* Quick Demo Fillers */}
-            <div className="flex gap-2 pt-1">
-              <button
-                onClick={() => handleQuickDemoLogin('principal')}
-                type="button"
-                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold py-2 rounded-lg transition-colors"
-              >
-                Autofill Principal
-              </button>
-              <button
-                onClick={() => handleQuickDemoLogin('teacher')}
-                type="button"
-                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold py-2 rounded-lg transition-colors"
-              >
-                Autofill Teacher (Pending)
-              </button>
-            </div>
           </div>
         </div>
 
