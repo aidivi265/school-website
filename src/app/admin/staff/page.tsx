@@ -47,7 +47,25 @@ export default function AdminStaffManagementPage() {
 
   const showFeedback = (msg: string) => {
     setActionNotice(msg);
-    setTimeout(() => setActionNotice(null), 3000);
+    setTimeout(() => setActionNotice(null), 4000);
+  };
+
+  const sendApprovalEmail = async (user: AdminUser, modules: string[]) => {
+    try {
+      await fetch('/api/admin/staff/notify-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          facultyName: user.name,
+          facultyEmail: user.email,
+          facultyDesignation: user.designation,
+          assignedModules: modules,
+          approvedBy: 'Principal Dr. Ananya Sharma',
+        }),
+      });
+    } catch (e) {
+      console.error('Email dispatch error:', e);
+    }
   };
 
   const handleOpenEdit = (user: AdminUser) => {
@@ -62,9 +80,17 @@ export default function AdminStaffManagementPage() {
     showFeedback(`Permissions updated for ${editingUser.name}`);
   };
 
-  const handleQuickApprove = (user: AdminUser) => {
+  const handleQuickApprove = async (user: AdminUser) => {
     approveUser(user.id, user.allowedModules);
-    showFeedback(`Approved staff access for ${user.name}`);
+    await sendApprovalEmail(user, user.allowedModules);
+    showFeedback(`✓ Access Approved! Email notification sent to ${user.email}`);
+  };
+
+  const handleApproveWithModules = async (user: AdminUser, modules: string[]) => {
+    approveUser(user.id, modules);
+    await sendApprovalEmail(user, modules);
+    setEditingUser(null);
+    showFeedback(`✓ Access Approved with custom modules! Notification sent to ${user.email}`);
   };
 
   const handleQuickReject = (user: AdminUser) => {

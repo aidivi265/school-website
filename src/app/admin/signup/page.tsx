@@ -270,10 +270,16 @@ export default function AdminStaffSignupPage() {
                 <p><strong>Status:</strong> <span className="font-bold text-amber-700">Pending Review</span></p>
               </div>
 
-              <div className="pt-4 flex flex-col gap-2">
+              <div className="pt-4 flex flex-col gap-2.5">
+                <Link
+                  href="/"
+                  className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                >
+                  Continue to Website →
+                </Link>
                 <Link
                   href="/admin/login"
-                  className="w-full py-3 bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs rounded-xl transition-colors shadow"
+                  className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors text-center"
                 >
                   Return to Admin Sign In
                 </Link>
