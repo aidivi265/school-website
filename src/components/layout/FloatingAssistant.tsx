@@ -166,29 +166,29 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
 
   return (
     <>
-      <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end">
+      <div className="fixed bottom-3 sm:bottom-6 right-3 sm:right-6 z-50 flex flex-col items-end">
         {/* Floating Trigger Button */}
         {!isOpen && (
           <div className="flex items-center gap-2">
             {/* WhatsApp Quick Button */}
             <button
               onClick={() => setIsWhatsAppOpen(true)}
-              className="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer"
               title="Instant WhatsApp Helpdesk"
             >
-              <MessageCircle className="w-6 h-6" />
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
 
             {/* AI Assistant Button */}
             <button
               onClick={() => setIsOpen(true)}
-              className="group flex items-center gap-2.5 bg-gradient-to-r from-navy-950 to-navy-900 text-white px-5 py-3.5 rounded-full shadow-2xl border border-amber-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="group flex items-center gap-2.5 bg-gradient-to-r from-navy-950 to-navy-900 text-white px-4 sm:px-5 py-3 sm:py-3.5 rounded-full shadow-2xl border border-amber-500/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
               aria-label="Open School Assistant"
             >
               <div className="relative">
-                <MessageSquare size={20} className="text-amber-400" />
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full animate-ping" />
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full" />
+                <MessageSquare size={18} className="text-amber-400" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-ping" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full" />
               </div>
               <span className="text-xs font-bold tracking-wide text-amber-300">
                 AI School Assistant
@@ -199,19 +199,19 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
 
         {/* Chatbot Window */}
         {isOpen && (
-          <div className="w-[92vw] sm:w-[380px] h-[500px] max-h-[75vh] sm:max-h-[78vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-200">
+          <div className="w-[calc(100vw-24px)] sm:w-[380px] h-[480px] sm:h-[500px] max-h-[calc(100vh-100px)] bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-3 duration-200">
             {/* Header */}
-            <div className="bg-navy-950 px-4 py-3 text-white flex items-center justify-between border-b border-navy-900 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold shadow-inner">
-                  <Bot size={18} />
+            <div className="bg-navy-950 px-3.5 py-2.5 sm:px-4 sm:py-3 text-white flex items-center justify-between border-b border-navy-900 shrink-0">
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold shadow-inner shrink-0">
+                  <Bot size={16} />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-serif font-bold text-xs sm:text-sm leading-tight text-white">DPS Smart Assistant</span>
+                    <span className="font-serif font-bold text-xs sm:text-sm leading-tight text-white">DPS Assistant</span>
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
-                  <p className="text-[10px] text-amber-300 font-medium">Bilingual Helpdesk (EN / HI)</p>
+                  <p className="text-[10px] text-amber-300/90 font-medium">Bilingual Helpdesk (EN / HI)</p>
                 </div>
               </div>
 
@@ -233,11 +233,11 @@ export default function FloatingAssistant({ initialFaqs }: { initialFaqs: FAQIte
                       },
                     ]);
                   }}
-                  className="px-2 py-1 rounded-lg bg-navy-900 border border-navy-800 text-[10px] font-bold text-amber-400 hover:bg-navy-800 transition-colors flex items-center gap-1 cursor-pointer"
+                  className="px-2 py-1 rounded-lg bg-navy-900 hover:bg-navy-800 border border-navy-800 text-[10px] font-bold text-amber-400 transition-colors flex items-center gap-1 cursor-pointer"
                   title="Switch Language"
                 >
                   <Globe size={11} />
-                  {language === 'en' ? 'हिंदी' : 'English'}
+                  {language === 'en' ? 'हिंदी' : 'EN'}
                 </button>
 
                 <button
