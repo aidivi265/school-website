@@ -28,11 +28,17 @@
   --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
   background-color: #f8fafc;
   color: #334155;
   font-family: var(--font-sans);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {

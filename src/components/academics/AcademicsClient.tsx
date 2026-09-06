@@ -165,7 +165,7 @@ export default function AcademicsClient() {
       </section>
 
       {/* Senior Secondary Streams (Classes XI & XII) */}
-      <section className="py-20 px-4 bg-white border-t border-slate-200">
+      <section id="streams" className="py-20 px-4 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Senior Secondary Wing"

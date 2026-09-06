@@ -14,6 +14,7 @@ export function VideoShowcaseSection() {
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [isInView, setIsInView] = useState(false);
 
   // Parallax scroll effect for video container
   const { scrollYProgress } = useScroll({
@@ -21,8 +22,32 @@ export function VideoShowcaseSection() {
     offset: ['start end', 'end start'],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1.0, 1.1]);
+  const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1.0, 1.08]);
+
+  // Pause video and disable animations when not in viewport to prevent lag
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        setIsInView(entry.isIntersecting);
+        if (videoRef.current) {
+          if (entry.isIntersecting && isPlaying) {
+            videoRef.current.play().catch(() => {});
+          } else {
+            videoRef.current.pause();
+          }
+        }
+      },
+      { rootMargin: '100px 0px', threshold: 0.05 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isPlaying]);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -30,7 +55,7 @@ export function VideoShowcaseSection() {
       videoRef.current.pause();
       setIsPlaying(false);
     } else {
-      videoRef.current.play();
+      videoRef.current.play().catch(() => {});
       setIsPlaying(true);
     }
   };
@@ -48,7 +73,7 @@ export function VideoShowcaseSection() {
     >
       {/* Parallax Video Background */}
       <motion.div
-        style={{ y, scale }}
+        style={{ y, scale, willChange: 'transform' }}
         className="absolute inset-0 w-full h-[120%] -top-[10%] pointer-events-none"
       >
         <video
@@ -57,6 +82,7 @@ export function VideoShowcaseSection() {
           loop
           muted={isMuted}
           playsInline
+          preload="metadata"
           poster="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1600&q=80"
           className="w-full h-full object-cover opacity-35"
         >

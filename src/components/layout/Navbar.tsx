@@ -133,7 +133,7 @@ const navCategories: NavCategory[] = [
       },
       {
         label: 'Track Application Status',
-        href: '/admissions',
+        href: '/admissions#track',
         description: 'Lookup application status with your Ref ID or Mobile.',
         icon: Search,
       },

@@ -138,6 +138,57 @@ export default function AboutClient({ initialSchool }: { initialSchool: School }
         </div>
       </section>
 
+      {/* Leadership & Principal Desk */}
+      <section id="leadership" className="py-20 px-4 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader
+            eyebrow="Leadership Desk"
+            title="Message from Our Principal"
+            subtitle="Guiding young minds towards excellence, character, and lifelong leadership"
+          />
+
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12">
+            <div className="lg:col-span-5 relative h-80 lg:h-auto bg-navy-950">
+              <img
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"
+                alt="Dr. Ananya Sharma, Principal"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent lg:hidden" />
+              <div className="absolute bottom-4 left-4 right-4 lg:hidden text-white">
+                <h4 className="font-serif font-bold text-lg">{data.principalName || 'Dr. Ananya Sharma'}</h4>
+                <p className="text-xs text-amber-400 font-semibold">{data.principalDesignation || 'Principal, Decent Public School'}</p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 p-8 sm:p-10 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="hidden lg:block">
+                  <h4 className="font-serif font-bold text-2xl text-navy-950">{data.principalName || 'Dr. Ananya Sharma'}</h4>
+                  <p className="text-xs text-amber-700 font-bold uppercase tracking-wider mt-0.5">
+                    {data.principalDesignation || 'Principal, Decent Public School'} · {data.principalQualification || 'M.Ed., Ph.D. (Education)'}
+                  </p>
+                </div>
+
+                <div className="border-l-2 border-amber-500 pl-4 py-1 italic text-slate-700 text-sm font-medium">
+                  "{data.principalQuote || 'Education is not merely the accumulation of facts, but the ignition of intellect, character, and ethical purpose.'}"
+                </div>
+
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  {data.principalMessageP1 ||
+                    'At Decent Public School, we believe that every child is endowed with unique brilliance. Our pedagogical mission is to kindle their innate curiosity, cultivate intellectual rigor, and instill deep-rooted moral values that empower them to face global challenges with courage and empathy.'}
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500">Decent Public School, Rohini</span>
+                <span className="text-xs font-serif font-bold text-amber-700">Sector 3, Rohini, Delhi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Core Values */}
       <section className="py-20 px-4 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto">

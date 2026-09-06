@@ -7,7 +7,7 @@ import EnquiryForm from '@/components/admissions/EnquiryForm';
 import { FeeCalculator } from '@/components/admissions/FeeCalculator';
 import { AdmissionTrackerModal } from '@/components/admissions/AdmissionTrackerModal';
 import { FileText, ArrowRight, Search, Sparkles, Calculator, HelpCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { School } from '@/types';
 import { usePagesCMS, useSiteSettings } from '@/lib/cms/useCMS';
 import { defaultPagesCMS } from '@/lib/cms/cmsStore';
@@ -17,6 +17,12 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
   const { settings } = useSiteSettings(initialSchool);
   const { pagesData } = usePagesCMS();
   const data = pagesData || defaultPagesCMS;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#track') {
+      setIsTrackerOpen(true);
+    }
+  }, []);
 
   const steps = [
     {
@@ -70,7 +76,7 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
       />
 
       {/* Quick Action Tools Bar */}
-      <section className="bg-amber-500/10 border-b border-amber-200/60 py-4 px-4">
+      <section id="track" className="bg-amber-500/10 border-b border-amber-200/60 py-4 px-4 scroll-mt-24">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs font-semibold text-amber-950">
             <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
@@ -146,7 +152,7 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
               </div>
 
               {/* Required Documents */}
-              <div>
+              <div id="documents" className="scroll-mt-24">
                 <h3 className="font-serif font-bold text-2xl text-navy-950 mb-4">
                   Documents Required at the Time of Admission
                 </h3>
@@ -176,7 +182,7 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
             </div>
 
             {/* Right Form Column */}
-            <div className="lg:col-span-6 lg:sticky lg:top-28">
+            <div id="enquiry" className="lg:col-span-6 lg:sticky lg:top-28 scroll-mt-24">
               <EnquiryForm />
             </div>
           </div>
@@ -184,7 +190,7 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
       </section>
 
       {/* Fee Calculator Section */}
-      <section className="py-12 px-4 bg-slate-50 border-t border-slate-200">
+      <section id="fee-calculator" className="py-12 px-4 bg-slate-50 border-t border-slate-200 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Financial Transparency"
@@ -196,7 +202,7 @@ export default function AdmissionsClient({ initialSchool }: { initialSchool: Sch
       </section>
 
       {/* 4 Steps Process */}
-      <section className="py-20 px-4 bg-white border-t border-slate-200">
+      <section id="process" className="py-20 px-4 bg-white border-t border-slate-200 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <SectionHeader
             eyebrow="Step-by-Step"
