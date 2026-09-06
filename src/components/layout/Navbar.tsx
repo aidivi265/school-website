@@ -245,44 +245,12 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
             : 'bg-white shadow-sm'
         }`}
       >
-        {/* Global Accessibility Toolbar */}
-        <AccessibilityToolbar />
-
-        {/* Top Info Strip */}
-        <div className="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950 text-white text-xs hidden lg:block border-b border-amber-500/25">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-1.5 flex items-center justify-between">
-            <div className="flex items-center gap-2.5 text-amber-300 text-[11px] font-medium">
-              <GraduationCap size={14} className="text-amber-400" />
-              <span>
-                {school.name} · {school.affiliation} Affiliated (No. {school.affiliation_no}) · Sector 3, Rohini, Delhi
-              </span>
-            </div>
-            <div className="flex items-center gap-5 text-slate-300 text-[11px]">
-              <a
-                href={`tel:${school.phone_office}`}
-                className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
-              >
-                <Phone size={11} className="text-amber-400" />
-                <span>{school.phone_office}</span>
-              </a>
-              <span className="w-px h-3 bg-navy-700" />
-              <a
-                href={`mailto:${school.email_general}`}
-                className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
-              >
-                <Mail size={11} className="text-amber-400" />
-                <span>{school.email_general}</span>
-              </a>
-              <span className="w-px h-3 bg-navy-700" />
-              <Link
-                href="/admin"
-                className="text-[11px] font-bold text-amber-400 hover:text-white transition-colors flex items-center gap-1"
-              >
-                Admin Portal →
-              </Link>
-            </div>
-          </div>
-        </div>
+        {/* Unified Top Info & Accessibility Toolbar */}
+        <AccessibilityToolbar
+          schoolPhone={school.phone_office}
+          schoolEmail={school.email_general}
+          affiliationNo={school.affiliation_no}
+        />
 
         {/* Main Navigation Bar */}
         <nav className="max-w-7xl mx-auto px-4 sm:px-6">
