@@ -31,6 +31,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
 
 body {
@@ -39,6 +40,16 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* GPU Acceleration for smooth animations */
+.animate-float-slow,
+.animate-marquee,
+.interactive-card,
+.btn-shine-effect {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
