@@ -40,18 +40,18 @@ export default function HomeTrustSection() {
             return (
               <div
                 key={idx}
-                className={`flex items-start gap-4 p-3 rounded-2xl transition-all ${
+                className={`group flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-slate-800/40 cursor-default ${
                   idx > 0 ? 'lg:border-l lg:border-navy-800/80 lg:pl-6' : ''
                 }`}
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center flex-shrink-0 text-amber-400">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center flex-shrink-0 text-amber-400 interactive-icon group-hover:border-amber-400 group-hover:bg-amber-500/25">
                   <Icon size={22} />
                 </div>
                 <div>
-                  <h3 className="font-serif font-bold text-white text-base leading-snug">
+                  <h3 className="font-serif font-bold text-white text-base leading-snug group-hover:text-amber-300 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-slate-400 text-xs mt-1 leading-relaxed">{item.subtitle}</p>
+                  <p className="text-slate-400 text-xs mt-1 leading-relaxed group-hover:text-slate-300 transition-colors">{item.subtitle}</p>
                 </div>
               </div>
             );

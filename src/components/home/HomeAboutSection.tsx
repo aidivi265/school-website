@@ -23,16 +23,16 @@ export default function HomeAboutSection({ initialSchool }: { initialSchool: Sch
   return (
     <section className="py-24 px-4 bg-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16 items-center">
-        <div className="relative">
+        <div className="relative group">
           <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-navy-950/15 relative">
             <img
               src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&q=85"
               alt="Students learning at Decent Public School"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
           </div>
           {/* Stat Box Badges */}
-          <div className="absolute -bottom-6 -right-2 sm:-right-6 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-2xl p-6 shadow-2xl hidden sm:block">
+          <div className="absolute -bottom-6 -right-2 sm:-right-6 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-2xl p-6 shadow-2xl hidden sm:block animate-float-slow">
             <p className="font-serif text-3xl font-bold leading-none">{data.statStudents || '2,500+'}</p>
             <p className="text-amber-100 text-xs mt-1 font-medium">Students Enrolled</p>
           </div>
@@ -66,18 +66,18 @@ export default function HomeAboutSection({ initialSchool }: { initialSchool: Sch
 
           <div className="grid grid-cols-2 gap-3.5 mb-9">
             {features.map((item) => (
-              <div key={item} className="flex items-center gap-2.5">
-                <div className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 text-amber-700">
+              <div key={item} className="flex items-center gap-2.5 group cursor-default">
+                <div className="w-5 h-5 rounded-full bg-amber-100 group-hover:bg-amber-500 group-hover:text-white flex items-center justify-center flex-shrink-0 text-amber-700 transition-colors duration-200">
                   <CheckCircle size={13} />
                 </div>
-                <span className="text-slate-700 text-xs sm:text-sm font-medium">{item}</span>
+                <span className="text-slate-700 group-hover:text-navy-950 text-xs sm:text-sm font-medium transition-colors">{item}</span>
               </div>
             ))}
           </div>
 
           <Link
             href="/about"
-            className="inline-flex items-center gap-2.5 bg-navy-950 text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-navy-900 transition-colors shadow-lg shadow-navy-950/20"
+            className="btn-shine-effect inline-flex items-center gap-2.5 bg-navy-950 text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-navy-900 transition-all duration-200 shadow-lg shadow-navy-950/20 hover:-translate-y-0.5 active:scale-[0.98]"
           >
             Read More About Us <ArrowRight size={16} />
           </Link>

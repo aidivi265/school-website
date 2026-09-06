@@ -40,7 +40,7 @@ export default function HomeHeroSection({ initialSchool }: { initialSchool: Scho
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full my-auto space-y-8">
         <div className="max-w-3xl space-y-5">
           {/* Brand Badge Pill */}
-          <div className="inline-flex items-center gap-2 bg-amber-500/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-amber-400/40 shadow-md">
+          <div className="inline-flex items-center gap-2 bg-amber-500/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-amber-400/40 shadow-md animate-float-slow">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span className="text-amber-300 text-xs font-bold uppercase tracking-[0.18em]">
               DECENT PUBLIC SCHOOL
@@ -69,21 +69,21 @@ export default function HomeHeroSection({ initialSchool }: { initialSchool: Scho
           <div className="flex flex-wrap items-center gap-3.5 pt-2">
             <Link
               href="/admissions"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-navy-950 font-bold px-6 py-3.5 rounded-xl transition-all shadow-xl shadow-amber-900/30 text-xs sm:text-sm active:scale-[0.98]"
+              className="btn-shine-effect inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-navy-950 font-bold px-6 py-3.5 rounded-xl transition-all duration-200 shadow-xl shadow-amber-900/30 text-xs sm:text-sm active:scale-[0.98] hover:shadow-amber-500/20 hover:-translate-y-0.5"
             >
               Admission Enquiry 2025–26 <ArrowRight size={16} />
             </Link>
 
             <Link
               href="/about"
-              className="inline-flex items-center justify-center gap-2 bg-white/95 hover:bg-white text-navy-950 font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg text-xs sm:text-sm active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 bg-white/95 hover:bg-white text-navy-950 font-bold px-6 py-3.5 rounded-xl transition-all duration-200 shadow-lg text-xs sm:text-sm active:scale-[0.98] hover:-translate-y-0.5"
             >
               Explore Our School
             </Link>
 
             <Link
               href="/book-visit"
-              className="inline-flex items-center justify-center gap-2 bg-navy-900/80 hover:bg-navy-800 text-white font-semibold px-5 py-3.5 rounded-xl border border-slate-700 transition-all text-xs sm:text-sm"
+              className="inline-flex items-center justify-center gap-2 bg-navy-900/80 hover:bg-navy-800 text-white font-semibold px-5 py-3.5 rounded-xl border border-slate-700 hover:border-amber-400/50 transition-all duration-200 text-xs sm:text-sm active:scale-[0.98] hover:-translate-y-0.5"
             >
               <Calendar size={15} className="text-amber-400" />
               Book Campus Visit
@@ -96,11 +96,11 @@ export default function HomeHeroSection({ initialSchool }: { initialSchool: Scho
           <div className="bg-slate-900/80 backdrop-blur-md border border-slate-800/90 rounded-2xl p-4 sm:p-5 shadow-2xl max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-800">
               {stats.slice(0, 4).map((stat, i) => (
-                <div key={stat.label} className={`${i !== 0 ? 'pt-2 sm:pt-0 sm:pl-4' : ''} space-y-0.5`}>
-                  <div className="font-serif text-amber-400 font-bold text-2xl sm:text-3xl leading-tight">
+                <div key={stat.label} className={`${i !== 0 ? 'pt-2 sm:pt-0 sm:pl-4' : ''} space-y-0.5 group cursor-default p-2 rounded-xl transition-all duration-300 hover:bg-slate-800/40`}>
+                  <div className="font-serif text-amber-400 font-bold text-2xl sm:text-3xl leading-tight group-hover:scale-105 transition-transform duration-300 origin-left">
                     <CountUpNumber value={stat.value} duration={1500 + i * 200} />
                   </div>
-                  <div className="text-slate-300 text-[11px] font-medium uppercase tracking-wider leading-snug">
+                  <div className="text-slate-300 group-hover:text-amber-200 text-[11px] font-medium uppercase tracking-wider leading-snug transition-colors">
                     {stat.label}
                   </div>
                 </div>

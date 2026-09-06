@@ -151,24 +151,24 @@ export default async function HomePage() {
               return (
                 <div
                   key={block.title}
-                  className="bg-slate-50 hover:bg-white rounded-3xl p-7 border border-slate-200 hover:border-amber-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                  className="group bg-slate-50 hover:bg-white rounded-3xl p-7 border border-slate-200 hover:border-amber-300 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-13 h-13 rounded-2xl bg-navy-950 text-amber-400 flex items-center justify-center mb-5 shadow-sm">
+                    <div className="w-13 h-13 rounded-2xl bg-navy-950 text-amber-400 flex items-center justify-center mb-5 shadow-sm interactive-icon group-hover:bg-amber-500 group-hover:text-navy-950 transition-colors">
                       <Icon size={24} />
                     </div>
                     <span className="text-[11px] font-bold text-amber-600 uppercase tracking-widest block mb-1">
                       {block.tag}
                     </span>
-                    <h3 className="font-serif font-bold text-navy-950 text-xl mb-3">{block.title}</h3>
+                    <h3 className="font-serif font-bold text-navy-950 text-xl mb-3 group-hover:text-amber-600 transition-colors">{block.title}</h3>
                     <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">{block.desc}</p>
                   </div>
                   <div className="mt-6 pt-4 border-t border-slate-200/60">
                     <Link
                       href={block.link}
-                      className="text-xs font-bold text-navy-950 hover:text-amber-600 flex items-center gap-1.5 transition-colors"
+                      className="text-xs font-bold text-navy-950 group-hover:text-amber-600 flex items-center gap-1.5 transition-colors"
                     >
-                      Explore Stage Details <ArrowRight size={13} />
+                      Explore Stage Details <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>
