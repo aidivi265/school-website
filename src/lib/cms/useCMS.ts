@@ -13,6 +13,7 @@ import {
   Notice,
   EventItem,
   FacultyMember,
+  Facility,
   GalleryAlbum,
   GalleryImage,
   Achievement,
@@ -124,6 +125,23 @@ export function useFaculty(initialFaculty?: FacultyMember[]) {
   }, []);
 
   return { faculty, setFaculty, upsertFaculty, deleteFaculty, isHydrated };
+}
+
+export function useFacilities(initialFacilities?: Facility[]) {
+  const [facilities, setFacilities, isHydrated] = useCMS<Facility[]>(
+    CMS_KEYS.FACILITIES,
+    initialFacilities && initialFacilities.length > 0 ? initialFacilities : CMSStore.getFacilities()
+  );
+
+  const upsertFacility = useCallback((facility: Facility) => {
+    CMSStore.upsertFacility(facility);
+  }, []);
+
+  const deleteFacility = useCallback((id: string) => {
+    CMSStore.deleteFacility(id);
+  }, []);
+
+  return { facilities, setFacilities, upsertFacility, deleteFacility, isHydrated };
 }
 
 export function useGallery(initialImages?: GalleryImage[], initialAlbums?: GalleryAlbum[]) {

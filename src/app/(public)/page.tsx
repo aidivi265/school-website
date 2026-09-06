@@ -42,6 +42,7 @@ import HomeCTABanner from '@/components/home/HomeCTABanner';
 import HomeNoticesSection from '@/components/home/HomeNoticesSection';
 import HomeEventsSection from '@/components/home/HomeEventsSection';
 import HomeAchievementsSection from '@/components/home/HomeAchievementsSection';
+import HomeFacilitiesSection from '@/components/home/HomeFacilitiesSection';
 
 export default async function HomePage() {
   const school = await getSchoolData();
@@ -184,69 +185,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── 6. FACILITIES PREVIEW ────────────────────────────────────────── */}
-      <section className="py-24 px-4 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="World-Class Campus"
-            title="Modern School Infrastructure"
-            subtitle="State-of-the-art facilities engineered to foster academic, scientific, and athletic excellence"
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {facilities.map((facility) => (
-              <Card key={facility.id} className="group overflow-hidden flex flex-col justify-between">
-                <div>
-                  <div className="relative h-48 overflow-hidden bg-navy-950">
-                    <img
-                      src={facility.image_url}
-                      alt={facility.title}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-3 left-4 right-4">
-                      <h3 className="font-serif font-bold text-white text-base sm:text-lg leading-tight">
-                        {facility.title}
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-2">
-                      {facility.description}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {facility.features?.slice(0, 2).map((f) => (
-                        <span
-                          key={f}
-                          className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-medium"
-                        >
-                          {f}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="px-5 pb-5 pt-0">
-                  <Link
-                    href="/facilities"
-                    className="text-[11px] font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
-                  >
-                    View Amenities <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/facilities"
-              className="inline-flex items-center gap-2 bg-white border-2 border-navy-950 text-navy-950 font-bold px-8 py-3.5 rounded-xl hover:bg-navy-950 hover:text-white transition-all shadow-sm"
-            >
-              Explore All Facilities & Campus <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeFacilitiesSection initialFacilities={facilities} />
 
       {/* ─── 7. STATS STRIP ───────────────────────────────────────────────── */}
       <section className="py-20 px-4 bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950 text-white relative overflow-hidden">

@@ -316,6 +316,41 @@ class CMSStoreManager {
     this.setFaculty(list);
   }
 
+  // ==================== FACILITIES ====================
+  public getFacilities(): Facility[] {
+    return this.get<Facility[]>(CMS_KEYS.FACILITIES, mockFacilities);
+  }
+
+  public setFacilities(facilities: Facility[]): void {
+    this.set(CMS_KEYS.FACILITIES, facilities);
+  }
+
+  public upsertFacility(facility: Facility): void {
+    const list = this.getFacilities();
+    const index = list.findIndex((f) => f.id === facility.id);
+    let updated: Facility[];
+    if (index >= 0) {
+      updated = [...list];
+      updated[index] = { ...updated[index], ...facility, updated_at: new Date().toISOString() };
+    } else {
+      updated = [
+        ...list,
+        {
+          ...facility,
+          id: facility.id || 'facility-' + Date.now(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ];
+    }
+    this.setFacilities(updated);
+  }
+
+  public deleteFacility(id: string): void {
+    const list = this.getFacilities().filter((f) => f.id !== id);
+    this.setFacilities(list);
+  }
+
   // ==================== GALLERY & ALBUMS ====================
   public getGallery(): GalleryImage[] {
     return this.get<GalleryImage[]>(CMS_KEYS.GALLERY, mockGalleryImages);

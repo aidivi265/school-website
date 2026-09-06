@@ -27,6 +27,7 @@ const sidebarLinks = [
   { label: 'Notices & News', href: '/admin/notices', icon: Bell },
   { label: 'Events Calendar', href: '/admin/events', icon: Calendar },
   { label: 'Faculty Directory', href: '/admin/faculty', icon: Users },
+  { label: 'Campus Facilities', href: '/admin/facilities', icon: GraduationCap },
   { label: 'Photo Gallery', href: '/admin/gallery', icon: ImageIcon },
   { label: 'Achievements', href: '/admin/achievements', icon: Trophy },
   { label: 'Documents & Circulars', href: '/admin/documents', icon: FileDown },
