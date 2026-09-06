@@ -1,34 +1,61 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/layout/AdminSidebar';
-import { Menu, ExternalLink } from 'lucide-react';
+import { Menu, ExternalLink, ShieldAlert, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
 
   // If on /admin/login, don't show the dashboard shell
   const isLoginPage = pathname === '/admin/login';
 
   useEffect(() => {
-    // Simple client auth check
-    if (!isLoginPage) {
-      const session = localStorage.getItem('dps_admin_session');
-      // If no session and in browser, default to demo session for ease of preview
-      if (!session) {
-        localStorage.setItem(
-          'dps_admin_session',
-          JSON.stringify({ email: 'admin@decentpublicschoolrohini.edu.in', role: 'admin' })
-        );
-      }
+    if (isLoginPage) {
+      setIsCheckingAuth(false);
+      return;
     }
-  }, [pathname, isLoginPage]);
+
+    try {
+      const sessionStr = localStorage.getItem('dps_admin_session');
+      if (sessionStr) {
+        const parsed = JSON.parse(sessionStr);
+        if (parsed && (parsed.email || parsed.role)) {
+          setIsAuthenticated(true);
+          setIsCheckingAuth(false);
+          return;
+        }
+      }
+    } catch {
+      // ignore parse error
+    }
+
+    // Not authenticated -> redirect to login
+    setIsAuthenticated(false);
+    setIsCheckingAuth(false);
+    router.replace('/admin/login');
+  }, [pathname, isLoginPage, router]);
 
   if (isLoginPage) {
     return <div className="min-h-screen bg-slate-900 text-slate-100">{children}</div>;
+  }
+
+  if (isCheckingAuth || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 text-white">
+        <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-4 text-amber-400">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+        <p className="font-serif font-bold text-lg text-white">Verifying Admin Permissions...</p>
+        <p className="text-xs text-slate-400 mt-1">Redirecting to administrator login portal</p>
+      </div>
+    );
   }
 
   return (

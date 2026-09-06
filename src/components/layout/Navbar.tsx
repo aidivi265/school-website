@@ -3,25 +3,179 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Phone, Mail, GraduationCap, ArrowRight } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Phone,
+  Mail,
+  GraduationCap,
+  ArrowRight,
+  ChevronDown,
+  Compass,
+  Trophy,
+  Users,
+  BookOpen,
+  Sparkles,
+  Calculator,
+  Search,
+  FileDown,
+  Building,
+  Image as ImageIcon,
+  Bell,
+  Briefcase,
+  HelpCircle,
+} from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { School } from '@/types';
 import { useSiteSettings } from '@/lib/cms/useCMS';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const navLinks = [
+interface DropdownItem {
+  label: string;
+  href: string;
+  description: string;
+  icon: any;
+  badge?: string;
+}
+
+interface NavCategory {
+  label: string;
+  href: string;
+  dropdown?: DropdownItem[];
+}
+
+const navCategories: NavCategory[] = [
   { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Virtual Tour', href: '/virtual-tour' },
-  { label: 'House System', href: '/house-system' },
-  { label: 'Academics', href: '/academics' },
-  { label: 'Facilities', href: '/facilities' },
-  { label: 'Admissions', href: '/admissions' },
-  { label: 'Notices', href: '/notices' },
-  { label: 'Events', href: '/events' },
-  { label: 'Gallery', href: '/gallery' },
-  { label: 'Wall of Fame', href: '/achievements' },
+  {
+    label: 'About Us',
+    href: '/about',
+    dropdown: [
+      {
+        label: 'School Vision & Legacy',
+        href: '/about',
+        description: 'Our heritage, mission, and 30+ years of CBSE educational excellence.',
+        icon: Building,
+      },
+      {
+        label: 'Principal & Leadership Desk',
+        href: '/about#leadership',
+        description: 'Inspiring message from Principal Dr. Ananya Sharma.',
+        icon: Users,
+      },
+      {
+        label: '360° Virtual Campus Tour',
+        href: '/virtual-tour',
+        description: 'Interactive panoramic zones, hotspots, and voice audio tour.',
+        icon: Compass,
+        badge: 'Interactive',
+      },
+      {
+        label: 'House System & Leaderboard',
+        href: '/house-system',
+        description: 'Agni, Trishul, Prithvi, and Akash Houses with live points table.',
+        icon: Trophy,
+      },
+      {
+        label: 'Faculty & Mentors Directory',
+        href: '/faculty',
+        description: 'Meet our dedicated CBSE PGT, TGT, and PRT subject masters.',
+        icon: GraduationCap,
+      },
+    ],
+  },
+  {
+    label: 'Academics',
+    href: '/academics',
+    dropdown: [
+      {
+        label: 'CBSE Curriculum & Pedagogy',
+        href: '/academics',
+        description: 'Foundational, Primary, Middle, and Secondary academic stages.',
+        icon: BookOpen,
+      },
+      {
+        label: 'Class 11 Stream Selector Quiz',
+        href: '/stream-selector',
+        description: '2-minute career match tool for Class 10 students entering Class 11.',
+        icon: Sparkles,
+        badge: 'AI Tool',
+      },
+      {
+        label: 'Senior Secondary Streams',
+        href: '/academics#streams',
+        description: 'Science (PCM/PCB), Commerce with Maths, and Humanities.',
+        icon: Building,
+      },
+      {
+        label: 'Events & Academic Calendar',
+        href: '/events',
+        description: 'Examinations, PTMs, annual festivals, and sports fixtures.',
+        icon: BookOpen,
+      },
+    ],
+  },
+  {
+    label: 'Admissions',
+    href: '/admissions',
+    dropdown: [
+      {
+        label: 'Admission Guidelines 2025–26',
+        href: '/admissions',
+        description: 'Criteria, age matrix, and online registration portal.',
+        icon: BookOpen,
+      },
+      {
+        label: 'Smart Fee & Bus Calculator',
+        href: '/admissions#fee-calculator',
+        description: 'Transparent quarterly fee & Rohini bus slab estimator.',
+        icon: Calculator,
+        badge: 'Calculator',
+      },
+      {
+        label: 'Track Application Status',
+        href: '/admissions',
+        description: 'Lookup application status with your Ref ID or Mobile.',
+        icon: Search,
+      },
+      {
+        label: 'Mandatory CBSE Documents',
+        href: '/downloads',
+        description: 'Affiliation certificates, safety audit reports, and syllabi.',
+        icon: FileDown,
+      },
+    ],
+  },
+  {
+    label: 'Campus Life',
+    href: '/facilities',
+    dropdown: [
+      {
+        label: 'Campus Facilities & Labs',
+        href: '/facilities',
+        description: 'STEM Tinkering Labs, skating rink, sports arena, and smart class.',
+        icon: Building,
+      },
+      {
+        label: 'Student Wall of Fame',
+        href: '/achievements',
+        description: 'CBSE Board toppers (95%+ club), Olympiads, and Alumni legacy.',
+        icon: Trophy,
+      },
+      {
+        label: 'Photo & Media Gallery',
+        href: '/gallery',
+        description: 'Vibrant glimpses of student life, events, and campus moments.',
+        icon: ImageIcon,
+      },
+      {
+        label: 'Notices & Circulars',
+        href: '/notices',
+        description: 'Official student announcements and holiday notifications.',
+        icon: Bell,
+      },
+    ],
+  },
   { label: 'Careers', href: '/careers' },
-  { label: 'Downloads', href: '/downloads' },
   { label: 'Contact', href: '/contact' },
   { label: 'FAQ', href: '/faq' },
 ];
@@ -30,11 +184,13 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
   const { settings: school } = useSiteSettings(initialSchool);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 25);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -42,6 +198,7 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
 
   useEffect(() => {
     setIsOpen(false);
+    setActiveDropdown(null);
   }, [pathname]);
 
   useEffect(() => {
@@ -66,35 +223,35 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
       >
         {/* Top Info Strip */}
         <div className="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950 text-white text-xs hidden lg:block border-b border-amber-500/25">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
-            <div className="flex items-center gap-2.5 text-amber-300 font-medium">
-              <GraduationCap size={15} className="text-amber-400" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-1.5 flex items-center justify-between">
+            <div className="flex items-center gap-2.5 text-amber-300 text-[11px] font-medium">
+              <GraduationCap size={14} className="text-amber-400" />
               <span>
                 {school.name} · {school.affiliation} Affiliated (No. {school.affiliation_no}) · Sector 3, Rohini, Delhi
               </span>
             </div>
-            <div className="flex items-center gap-6 text-slate-300 text-xs">
+            <div className="flex items-center gap-5 text-slate-300 text-[11px]">
               <a
                 href={`tel:${school.phone_office}`}
                 className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
               >
-                <Phone size={12} className="text-amber-400" />
+                <Phone size={11} className="text-amber-400" />
                 <span>{school.phone_office}</span>
               </a>
-              <span className="w-px h-3.5 bg-navy-700" />
+              <span className="w-px h-3 bg-navy-700" />
               <a
                 href={`mailto:${school.email_general}`}
                 className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
               >
-                <Mail size={12} className="text-amber-400" />
+                <Mail size={11} className="text-amber-400" />
                 <span>{school.email_general}</span>
               </a>
-              <span className="w-px h-3.5 bg-navy-700" />
+              <span className="w-px h-3 bg-navy-700" />
               <Link
                 href="/admin"
-                className="text-[11px] font-semibold text-amber-400 hover:text-white transition-colors"
+                className="text-[11px] font-bold text-amber-400 hover:text-white transition-colors flex items-center gap-1"
               >
-                Portal / Admin Login →
+                Admin Portal →
               </Link>
             </div>
           </div>
@@ -105,51 +262,109 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
           <div className="flex items-center justify-between h-16 sm:h-[4.25rem]">
             {/* Brand Logo & Name */}
             <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
-              <SchoolCrest size={44} />
+              <SchoolCrest size={42} />
               <div>
                 <div className="font-serif font-bold text-navy-950 text-base sm:text-lg leading-tight tracking-tight group-hover:text-amber-700 transition-colors">
                   {school.name}
                 </div>
-                <div className="text-[11px] text-amber-700 font-bold uppercase tracking-wider leading-tight mt-0.5">
+                <div className="text-[10px] text-amber-700 font-bold uppercase tracking-wider leading-tight mt-0.5">
                   Rohini, Delhi · {school.affiliation} Affiliated
                 </div>
               </div>
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden xl:flex items-center space-x-0.5">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+            {/* Desktop Navigation with Dropdowns */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {navCategories.map((cat) => {
+                const hasDropdown = Boolean(cat.dropdown && cat.dropdown.length > 0);
+                const isDropdownActive = activeDropdown === cat.label;
+                const isActiveRoute = pathname === cat.href || (cat.href !== '/' && pathname.startsWith(cat.href));
+
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`relative px-2.5 py-3 text-[13px] font-medium transition-colors whitespace-nowrap group ${
-                      isActive ? 'text-amber-600 font-bold' : 'text-slate-700 hover:text-navy-950'
-                    }`}
+                  <div
+                    key={cat.label}
+                    className="relative"
+                    onMouseEnter={() => hasDropdown && setActiveDropdown(cat.label)}
+                    onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
                   >
-                    {link.label}
-                    <span
-                      className={`absolute bottom-1 left-2.5 right-2.5 h-0.5 bg-amber-500 rounded-full transition-all duration-200 ${
-                        isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'
+                    <Link
+                      href={cat.href}
+                      className={`px-3 py-2 text-xs font-semibold rounded-lg flex items-center gap-1 transition-colors ${
+                        isActiveRoute || isDropdownActive
+                          ? 'text-amber-600 bg-amber-50/60 font-bold'
+                          : 'text-slate-700 hover:text-navy-950 hover:bg-slate-50'
                       }`}
-                    />
-                  </Link>
+                    >
+                      <span>{cat.label}</span>
+                      {hasDropdown && (
+                        <ChevronDown
+                          size={13}
+                          className={`transition-transform duration-200 ${
+                            isDropdownActive ? 'rotate-180 text-amber-600' : 'text-slate-400'
+                          }`}
+                        />
+                      )}
+                    </Link>
+
+                    {/* Mega-Menu / Dropdown Overlay */}
+                    <AnimatePresence>
+                      {hasDropdown && isDropdownActive && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.18 }}
+                          className="absolute top-full left-0 mt-1 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 z-50 space-y-1.5"
+                        >
+                          {cat.dropdown?.map((sub) => {
+                            const SubIcon = sub.icon;
+                            return (
+                              <Link
+                                key={sub.label}
+                                href={sub.href}
+                                className="p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-start gap-3 group/sub block"
+                              >
+                                <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 shrink-0 group-hover/sub:scale-110 transition-transform">
+                                  <SubIcon size={16} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-serif font-bold text-xs text-navy-950 group-hover/sub:text-amber-700 transition-colors truncate">
+                                      {sub.label}
+                                    </span>
+                                    {sub.badge && (
+                                      <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">
+                                        {sub.badge}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 leading-tight line-clamp-1 mt-0.5">
+                                    {sub.description}
+                                  </p>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 );
               })}
             </div>
 
-            {/* CTA Button & Mobile Toggle */}
+            {/* Right Action CTA & Mobile Toggle */}
             <div className="flex items-center gap-3">
               <Link
                 href="/admissions"
-                className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-md shadow-amber-500/25 whitespace-nowrap active:scale-[0.98]"
+                className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-navy-950 text-xs font-bold px-4 py-2.5 rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all shadow-md shadow-amber-500/20 whitespace-nowrap active:scale-[0.98]"
               >
-                Admission Enquiry <ArrowRight size={14} />
+                Admissions 2025–26 <ArrowRight size={14} />
               </Link>
+
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="xl:hidden p-2 rounded-xl text-navy-900 hover:bg-slate-100 transition-colors"
+                className="lg:hidden p-2 rounded-xl text-navy-900 hover:bg-slate-100 transition-colors"
                 aria-label="Toggle Navigation Menu"
               >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -162,73 +377,101 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
       {/* Mobile Drawer Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-navy-950/70 backdrop-blur-sm xl:hidden"
+          className="fixed inset-0 z-50 bg-navy-950/70 backdrop-blur-sm lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Mobile Slide-Out Menu */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-50 w-[300px] sm:w-[340px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out xl:hidden flex flex-col ${
+        className={`fixed top-0 right-0 bottom-0 z-50 w-[300px] sm:w-[350px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-navy-950 to-navy-900 border-b border-amber-500/30">
+        <div className="flex items-center justify-between px-5 py-4 bg-navy-950 border-b border-navy-800">
           <div className="flex items-center gap-3">
-            <SchoolCrest size={38} />
+            <SchoolCrest size={36} />
             <div>
               <p className="font-serif font-bold text-white text-sm leading-tight">{school.name}</p>
-              <p className="text-amber-400 text-[10px] font-semibold uppercase tracking-wider">Rohini, Delhi</p>
+              <p className="text-[10px] text-amber-400 font-semibold uppercase tracking-wider">
+                Sector 3, Rohini
+              </p>
             </div>
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-navy-800 transition-colors"
-            aria-label="Close menu"
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-navy-900 transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+        {/* Mobile Navigation List with Sub-Accordions */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+          {navCategories.map((cat) => {
+            const hasDropdown = Boolean(cat.dropdown && cat.dropdown.length > 0);
+            const isExpanded = mobileExpandedCat === cat.label;
+
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                  isActive
-                    ? 'bg-navy-950 text-amber-400 font-bold'
-                    : 'text-slate-700 hover:bg-slate-100 hover:text-navy-950'
-                }`}
-              >
-                <span>{link.label}</span>
-                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
-              </Link>
+              <div key={cat.label} className="border-b border-slate-100 last:border-b-0 pb-1">
+                <div className="flex items-center justify-between">
+                  <Link
+                    href={cat.href}
+                    onClick={() => !hasDropdown && setIsOpen(false)}
+                    className="flex-1 py-2.5 text-xs font-bold text-navy-950 hover:text-amber-600"
+                  >
+                    {cat.label}
+                  </Link>
+
+                  {hasDropdown && (
+                    <button
+                      onClick={() => setMobileExpandedCat(isExpanded ? null : cat.label)}
+                      className="p-2 text-slate-400 hover:text-navy-950"
+                    >
+                      <ChevronDown
+                        size={15}
+                        className={`transition-transform duration-200 ${isExpanded ? 'rotate-180 text-amber-600' : ''}`}
+                      />
+                    </button>
+                  )}
+                </div>
+
+                {/* Sub Menu Accordion in Mobile Drawer */}
+                {hasDropdown && isExpanded && (
+                  <div className="pl-3 pb-2 space-y-1 bg-slate-50 rounded-xl p-2 my-1">
+                    {cat.dropdown?.map((sub) => (
+                      <Link
+                        key={sub.label}
+                        href={sub.href}
+                        onClick={() => setIsOpen(false)}
+                        className="block py-1.5 px-2 text-[11px] font-semibold text-slate-700 hover:text-amber-700 hover:bg-white rounded-lg transition-colors"
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
 
-        <div className="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
+        {/* Mobile Footer CTAs */}
+        <div className="p-4 border-t border-slate-200 bg-slate-50 space-y-2">
           <Link
             href="/admissions"
             onClick={() => setIsOpen(false)}
-            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-3 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all text-sm shadow-md"
+            className="w-full bg-amber-500 hover:bg-amber-600 text-navy-950 font-bold text-xs py-3 rounded-xl text-center block shadow"
           >
-            Admission Enquiry <ArrowRight size={15} />
+            Apply for Admission 2025–26
           </Link>
-          <div className="text-xs text-slate-600 space-y-1.5 pt-1">
-            <div className="flex items-center gap-2">
-              <Phone size={13} className="text-amber-600" />
-              <span>{school.phone_office}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail size={13} className="text-amber-600" />
-              <span className="truncate">{school.email_general}</span>
-            </div>
-          </div>
+          <Link
+            href="/admin"
+            onClick={() => setIsOpen(false)}
+            className="w-full bg-navy-950 text-white font-bold text-xs py-2.5 rounded-xl text-center block"
+          >
+            Admin CMS Portal Login →
+          </Link>
         </div>
       </div>
     </>

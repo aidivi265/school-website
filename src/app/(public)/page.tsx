@@ -44,6 +44,8 @@ import HomeEventsSection from '@/components/home/HomeEventsSection';
 import HomeAchievementsSection from '@/components/home/HomeAchievementsSection';
 import HomeFacilitiesSection from '@/components/home/HomeFacilitiesSection';
 import { DayInTheLifeSection } from '@/components/home/DayInTheLifeSection';
+import { VideoShowcaseSection } from '@/components/home/VideoShowcaseSection';
+import { CountUpNumber } from '@/components/ui/CountUpNumber';
 
 export default async function HomePage() {
   const school = await getSchoolData();
@@ -198,11 +200,11 @@ export default async function HomePage() {
             backgroundSize: '32px 32px',
           }}
         />
-        <div className="relative max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 text-center">
+        <div className="relative max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 text-center">
           {mockStats.map((s, i) => (
             <div key={s.label} className={i > 0 ? 'sm:border-l sm:border-navy-800/80 sm:pl-4' : ''}>
-              <p className="font-serif font-bold text-3xl sm:text-4xl text-amber-400 mb-1.5 leading-none">
-                {s.value}
+              <p className="font-serif font-bold text-2xl sm:text-3xl text-amber-400 mb-1.5 leading-none">
+                <CountUpNumber value={s.value} duration={1800 + i * 150} />
               </p>
               <div className="w-8 h-0.5 bg-amber-500 mx-auto mb-2" />
               <p className="text-slate-300 text-[11px] uppercase tracking-widest font-medium">
@@ -212,6 +214,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ─── 7B. AMBIENT PARALLAX VIDEO SHOWCASE & EXPERIENCE ──────────────── */}
+      <VideoShowcaseSection />
 
       {/* ─── 8. LATEST NOTICES & NOTICE BOARD ──────────────────────────────── */}
       <HomeNoticesSection initialNotices={notices} />
