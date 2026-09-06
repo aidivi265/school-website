@@ -16,6 +16,8 @@ import {
   ArrowRight,
   Clock,
   Sparkles,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { MODULE_DEFINITIONS, useAdminStaffManager } from '@/lib/cms/adminAuthStore';
 import { motion } from 'framer-motion';
