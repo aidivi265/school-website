@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { X, Bell, Calendar, ArrowRight, Sparkles, GraduationCap, CheckCircle } from 'lucide-react';
 import { SchoolCrest } from '@/components/ui';
 import { useNotices } from '@/lib/cms/useCMS';
@@ -11,8 +12,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function SchoolNoticeModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { notices } = useNotices();
+  const pathname = usePathname();
 
   useEffect(() => {
+    // Only show on Homepage
+    if (pathname !== '/') return;
+
     // Check if dismissed in this browser session
     const isDismissed = sessionStorage.getItem('dps_notice_modal_seen');
     if (!isDismissed) {
@@ -21,7 +26,7 @@ export default function SchoolNoticeModal() {
       }, 900); // 900ms subtle entrance delay
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [pathname]);
 
   const handleClose = () => {
     setIsOpen(false);

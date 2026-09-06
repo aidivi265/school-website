@@ -369,8 +369,8 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
           </div>
         </nav>
 
-        {/* Live News & Circulars Ticker Bar */}
-        <LiveNoticeTicker />
+        {/* Live News & Circulars Ticker Bar (Homepage Only) */}
+        {pathname === '/' && <LiveNoticeTicker />}
       </header>
 
       {/* Mobile Drawer Overlay */}
