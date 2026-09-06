@@ -32,6 +32,7 @@ import { School } from '@/types';
 import { useSiteSettings } from '@/lib/cms/useCMS';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AccessibilityToolbar } from '@/components/layout/AccessibilityToolbar';
+import LiveNoticeTicker from '@/components/layout/LiveNoticeTicker';
 
 interface DropdownItem {
   label: string;
@@ -367,6 +368,9 @@ export default function Navbar({ school: initialSchool }: { school: School }) {
             </div>
           </div>
         </nav>
+
+        {/* Live News & Circulars Ticker Bar */}
+        <LiveNoticeTicker />
       </header>
 
       {/* Mobile Drawer Overlay */}
