@@ -246,6 +246,43 @@ export function useAdminStaffManager() {
     return { success: true, message: 'Registration request submitted for Principal approval.' };
   };
 
+  const addStaffDirectly = (data: {
+    name: string;
+    email: string;
+    password: string;
+    designation: string;
+    allowedModules: string[];
+    role?: 'staff' | 'super_admin';
+  }) => {
+    const existing = users.find((u) => u.email.toLowerCase() === data.email.toLowerCase().trim());
+    if (existing) {
+      return { success: false, message: 'An account with this email address already exists.' };
+    }
+
+    const newUser: AdminUser = {
+      id: `usr-staff-${Date.now()}`,
+      name: data.name.trim(),
+      email: data.email.trim().toLowerCase(),
+      password: data.password.trim() || 'Teacher@2025',
+      designation: data.designation.trim() || 'Staff Faculty Member',
+      role: data.role || 'staff',
+      status: 'active',
+      allowedModules: data.allowedModules.length > 0 ? data.allowedModules : ['notices', 'events'],
+      isProtected: false,
+      createdAt: new Date().toISOString().split('T')[0],
+      approvedAt: new Date().toISOString().split('T')[0],
+      approvedBy: 'Principal / Super Admin',
+    };
+
+    const updated = [newUser, ...users];
+    updateUsersList(updated);
+    return {
+      success: true,
+      message: `Staff member "${newUser.name}" successfully created with active login access!`,
+      user: newUser,
+    };
+  };
+
   return {
     users,
     isLoaded,
@@ -255,5 +292,6 @@ export function useAdminStaffManager() {
     updatePermissions,
     removeUser,
     registerStaffRequest,
+    addStaffDirectly,
   };
 }
