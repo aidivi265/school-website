@@ -35,6 +35,10 @@ import { formatDate, formatEventDate } from '@/lib/utils';
 import HomeFAQAccordion from '@/components/home/HomeFAQAccordion';
 import HomeGalleryLightbox from '@/components/home/HomeGalleryLightbox';
 import HomeHeroSection from '@/components/home/HomeHeroSection';
+import HomeTrustSection from '@/components/home/HomeTrustSection';
+import HomeAboutSection from '@/components/home/HomeAboutSection';
+import HomePrincipalSection from '@/components/home/HomePrincipalSection';
+import HomeCTABanner from '@/components/home/HomeCTABanner';
 import HomeNoticesSection from '@/components/home/HomeNoticesSection';
 import HomeEventsSection from '@/components/home/HomeEventsSection';
 import HomeAchievementsSection from '@/components/home/HomeAchievementsSection';
@@ -120,163 +124,13 @@ export default async function HomePage() {
       <HomeHeroSection initialSchool={school} />
 
       {/* ─── 2. TRUST & HIGHLIGHTS STRIP ──────────────────────────────────── */}
-      <section className="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950 border-b border-amber-500/25 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {trustHighlights.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className={`flex items-start gap-4 p-3 rounded-2xl transition-all ${
-                    idx > 0 ? 'lg:border-l lg:border-navy-800/80 lg:pl-6' : ''
-                  }`}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center flex-shrink-0 text-amber-400">
-                    <Icon size={22} />
-                  </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-white text-base leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="text-slate-400 text-xs mt-1 leading-relaxed">{item.subtitle}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <HomeTrustSection />
 
       {/* ─── 3. ABOUT SCHOOL SECTION ──────────────────────────────────────── */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16 items-center">
-          <div className="relative">
-            <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-navy-950/15 relative">
-              <img
-                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&q=85"
-                alt="Students learning at Decent Public School"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Stat Box Badges */}
-            <div className="absolute -bottom-6 -right-2 sm:-right-6 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-2xl p-6 shadow-2xl hidden sm:block">
-              <p className="font-serif text-3xl font-bold leading-none">2,200+</p>
-              <p className="text-amber-100 text-xs mt-1 font-medium">Students Enrolled</p>
-            </div>
-            <div className="absolute -top-6 -left-2 sm:-left-6 bg-navy-950 border border-amber-500/30 text-white rounded-2xl p-5 shadow-xl hidden sm:block">
-              <p className="font-serif text-amber-400 text-2xl font-bold leading-none">30+ Yrs</p>
-              <p className="text-slate-300 text-[11px] mt-0.5 uppercase tracking-wider">Educational Heritage</p>
-            </div>
-          </div>
-
-          <div>
-            <div className="inline-flex items-center gap-2 mb-3">
-              <span className="w-6 h-px bg-amber-500" />
-              <p className="text-amber-600 font-bold text-xs uppercase tracking-[0.2em]">
-                About Our Institution
-              </p>
-              <span className="w-6 h-px bg-amber-500" />
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-navy-950 leading-tight mb-5">
-              A Legacy of Academic Rigour & Character Building
-            </h2>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Welcome to <strong>Decent Public School</strong>, Rohini, an institution committed to providing world-class education rooted in traditional values and modern scientific temper. Since {school.established}, we have created an inspiring ecosystem where students discover their true potential.
-            </p>
-            <p className="text-slate-600 leading-relaxed mb-8">
-              We believe education extends far beyond textbooks — it encompasses intellectual curiosity, physical agility, moral character, and empathy for society.
-            </p>
-
-            <div className="grid grid-cols-2 gap-3.5 mb-9">
-              {[
-                'CBSE Affiliated Senior Secondary',
-                'Smart Digital Classrooms',
-                '110+ Dedicated Educators',
-                'Advanced Science & AI Labs',
-                'Comprehensive Sports Complex',
-                'Safe GPS-Tracked Transport',
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 text-amber-700">
-                    <CheckCircle size={13} />
-                  </div>
-                  <span className="text-slate-700 text-xs sm:text-sm font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2.5 bg-navy-950 text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-navy-900 transition-colors shadow-lg shadow-navy-950/20"
-            >
-              Read More About Us <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeAboutSection initialSchool={school} />
 
       {/* ─── 4. PRINCIPAL'S MESSAGE ───────────────────────────────────────── */}
-      <section className="py-24 px-4 bg-slate-50 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            eyebrow="Leadership"
-            title="Principal's Message"
-            subtitle="Guiding young minds towards academic brilliance, compassion, and progressive leadership"
-          />
-
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
-              <div className="h-1.5 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
-              <div className="p-8 sm:p-12">
-                <div className="flex flex-col sm:flex-row gap-10 items-start">
-                  {/* Photo */}
-                  <div className="flex-shrink-0 text-center sm:text-left mx-auto sm:mx-0">
-                    <div className="w-36 h-36 rounded-2xl overflow-hidden mx-auto sm:mx-0 shadow-xl ring-4 ring-amber-100 border-2 border-white">
-                      <img
-                        src={principal.image}
-                        alt={principal.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="mt-4">
-                      <p className="font-serif font-bold text-navy-950 text-base">{principal.name}</p>
-                      <p className="text-amber-600 text-xs font-semibold mt-0.5">{principal.designation}</p>
-                      <p className="text-slate-400 text-xs mt-0.5">{principal.qualification}</p>
-                    </div>
-                  </div>
-
-                  {/* Message Content */}
-                  <div className="flex-1">
-                    <svg className="w-10 h-8 text-amber-300 mb-4" viewBox="0 0 48 36" fill="currentColor">
-                      <path d="M0 36V22.5C0 14.833 2.583 8.917 7.75 4.75 12.917.583 20.083-1 29.25 0l1.5 5.25C25.083 4.417 20.75 5.5 17.5 8.5 14.25 11.5 12.5 15.5 12.5 20.5V36H0zm28 0V22.5c0-7.667 2.583-13.583 7.75-17.75C40.917.583 48.083-1 57.25 0l1.5 5.25C53.083 4.417 48.75 5.5 45.5 8.5c-3.25 3-5 7-5 12V36H28z" />
-                    </svg>
-
-                    {principal.message.map((para, i) => (
-                      <p key={i} className="text-slate-700 text-sm sm:text-base leading-relaxed mb-4 last:mb-0">
-                        {para}
-                      </p>
-                    ))}
-
-                    <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
-                      <div>
-                        <p className="text-slate-400 text-xs uppercase tracking-wider">With warm regards,</p>
-                        <p className="font-serif font-bold text-navy-950 text-lg mt-0.5">{principal.name}</p>
-                      </div>
-                      <Link
-                        href="/faculty"
-                        className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
-                      >
-                        Meet Our Faculty <ArrowRight size={13} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomePrincipalSection />
 
       {/* ─── 5. ACADEMICS BLOCKS ──────────────────────────────────────────── */}
       <section className="py-24 px-4 bg-white">
@@ -589,55 +443,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── 15. ADMISSION CTA BANNER ─────────────────────────────────────── */}
-      <section className="relative py-24 px-4 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=70"
-            alt="School Building"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/98 via-navy-900/95 to-navy-950/95" />
-        </div>
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
-
-        <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
-          <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-md px-5 py-2.5 rounded-full border border-amber-400/30 mb-7">
-            <Sparkles size={16} className="text-amber-400" />
-            <span className="text-amber-300 text-xs font-bold uppercase tracking-[0.2em]">
-              Admissions Open · Session 2025–26
-            </span>
-          </div>
-          <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-4 leading-tight">
-            Give Your Child the Foundation for a <span className="text-amber-400">Brilliant Future</span>
-          </h2>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-9 max-w-xl mx-auto">
-            Experience world-class education with personal mentoring, innovative labs, and ethical values in the heart of Rohini, Delhi.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/admissions"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-9 py-4 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-2xl shadow-amber-900/50 text-base active:scale-[0.98]"
-            >
-              Admission Process & Enquiry <ArrowRight size={18} />
-            </Link>
-            <a
-              href={`tel:${school.phone_admissions}`}
-              className="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white font-bold px-9 py-4 rounded-xl hover:bg-white/10 hover:border-white/50 transition-all text-base"
-            >
-              <Phone size={17} /> Call Admissions Desk
-            </a>
-          </div>
-
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-6 text-slate-400 text-xs">
-            <span className="flex items-center justify-center gap-2">
-              <Phone size={13} className="text-amber-400" /> {school.phone_office}
-            </span>
-            <span className="flex items-center justify-center gap-2">
-              <MapPin size={13} className="text-amber-400" /> {school.full_address}
-            </span>
-          </div>
-        </div>
-      </section>
+      <HomeCTABanner initialSchool={school} />
     </>
   );
 }
